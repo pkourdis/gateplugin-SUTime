@@ -57,7 +57,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         return outputASName;
     }
 
-    private String referenceDate = null;
+    private String referenceDate;
 
     @RunTime
     @Optional
