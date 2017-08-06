@@ -14,6 +14,7 @@ import edu.stanford.nlp.time.*;
 import edu.stanford.nlp.util.CoreMap;
 import gate.util.GateException;
 import gate.util.InvalidOffsetException;
+import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -60,7 +61,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "xxxxx", defaultValue = "")
+    @CreoleParameter(comment = "Reference date of the document.", defaultValue = "")
     public void setReferenceDate(String date) {
         referenceDate = date;
     }
@@ -86,6 +87,12 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         AnnotationPipeline pipeline = new AnnotationPipeline();
         pipeline.addAnnotator(new TokenizerAnnotator(false));
         pipeline.addAnnotator(new TimeAnnotator("sutime", props));
+
+        LocalDate todaysDate;
+        if (referenceDate.equals("")) {
+            todaysDate = new LocalDate();
+            referenceDate = todaysDate.toString();
+        }
 
         Annotation annotation = new Annotation(docContent);
         annotation.set(CoreAnnotations.DocDateAnnotation.class, referenceDate);
