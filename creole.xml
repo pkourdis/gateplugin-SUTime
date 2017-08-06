@@ -7,14 +7,14 @@
       <CLASS>gate.creole.SUTime</CLASS>
       <COMMENT>Annotate documents with TIMEX3 tags using the SUTime library.</COMMENT>
       <PARAMETER NAME="document"
-                 COMMENT="The document to be analysed"
+                 COMMENT="The document to be analysed."
                  RUNTIME="true">gate.Document</PARAMETER>
       <PARAMETER NAME="inputASName"
-                 COMMENT="The annotation set to be used for input"
+                 COMMENT="The annotation set to be used for input."
                  OPTIONAL="true"
                  RUNTIME="true">java.lang.String</PARAMETER>
       <PARAMETER NAME="outputASName"
-                 COMMENT="The annotation set to be used for output"
+                 COMMENT="The annotation set to be used for output."
                  OPTIONAL="true"
                  RUNTIME="true">java.lang.String</PARAMETER>
      </RESOURCE>
