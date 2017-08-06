@@ -1,5 +1,5 @@
 .DS_Store
-SUTime.iml
-SUTime.jar
+*.iml
+*.jar
 .idea/
 target/
