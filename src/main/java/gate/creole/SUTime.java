@@ -60,7 +60,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "xxxxx")
+    @CreoleParameter(comment = "xxxxx", defaultValue = "")
     public void setReferenceDate(String date) {
         referenceDate = date;
     }
