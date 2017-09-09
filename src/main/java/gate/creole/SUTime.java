@@ -86,7 +86,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         String docContent;
         int docContentLength;
         long execStartTime;
-        String refDate = null;
+        String refDate;
 
         execStartTime = System.currentTimeMillis();
         fireStatusChanged("Performing temporal tagging annotations with SUTime in " + document.getName());
@@ -102,29 +102,28 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         pipeline.addAnnotator(new TimeAnnotator("sutime", props));
 
         setDocumentFileTimeStamps();
-
-        if (referenceDate.equals("")) {
+        refDate = referenceDate;
+        if (refDate.equals("")) {
         throw new ExecutionException("Empty reference date. Please provide a valid option.");
-        } else if (referenceDate.equals("today")) {
+        } else if (refDate.equals("today")) {
             refDate = LocalDate.now().toString();
-        } else if (referenceDate.equals("CT") && creationTime != null ) {
+        } else if (refDate.equals("CT") && creationTime != null ) {
             refDate = creationTime.toString();
-        } else if (referenceDate.equals("CT") && creationTime == null ) {
+        } else if (refDate.equals("CT") && creationTime == null ) {
             throw new ExecutionException("Creation time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
-        } else if (referenceDate.equals("LT") && lastAccessTime != null ) {
+        } else if (refDate.equals("LT") && lastAccessTime != null ) {
             refDate = lastAccessTime.toString();
-        } else if (referenceDate.equals("CT") && lastAccessTime == null ) {
+        } else if (refDate.equals("CT") && lastAccessTime == null ) {
             throw new ExecutionException("Last access time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
-        } else if (referenceDate.equals("MT") && lastModifiedTime != null ) {
+        } else if (refDate.equals("MT") && lastModifiedTime != null ) {
             refDate = lastModifiedTime.toString();
-        } else if (referenceDate.equals("MT") && lastModifiedTime == null ) {
+        } else if (refDate.equals("MT") && lastModifiedTime == null ) {
             throw new ExecutionException("Last modified time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
         }
 
         Annotation annotation = new Annotation(docContent);
         annotation.set(CoreAnnotations.DocDateAnnotation.class, refDate);
         pipeline.annotate(annotation);
-
         List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
 
         if (timexAnnsAll.isEmpty()) {
@@ -159,12 +158,10 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     private void setDocumentFileTimeStamps() {
 
-        Path file = null;
         try {
             LocalDateTime localDateTime;
-            file = Paths.get(document.getSourceUrl().toURI());
-            BasicFileAttributes attr = null;
-            attr = Files.readAttributes(file, BasicFileAttributes.class);
+            Path file = Paths.get(document.getSourceUrl().toURI());
+            BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
             if (attr != null) {
                 localDateTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
                 creationTime = localDateTime.toLocalDate();
