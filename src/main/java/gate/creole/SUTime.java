@@ -18,6 +18,7 @@ import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Properties;
 import java.net.URL;
@@ -74,14 +75,16 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     public void execute() throws ExecutionException {
 
         String docContent;
+        int docContentLength;
         long execStartTime;
 
         execStartTime = System.currentTimeMillis();
-        fireStatusChanged("Performing temporal tagging annotations with SUTime in" + document.getName());
+        fireStatusChanged("Performing temporal tagging annotations with SUTime in " + document.getName());
         fireProgressChanged(0);
 
         if(document == null) throw new ExecutionException("No document to process!");
         docContent = document.getContent().toString();
+        docContentLength = docContent.length();
 
         Properties props = new Properties();
         AnnotationPipeline pipeline = new AnnotationPipeline();
@@ -99,12 +102,21 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         pipeline.annotate(annotation);
 
         List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
-        if (timexAnnsAll.isEmpty()) return;
+
+        if (timexAnnsAll.isEmpty()) {
+            fireProcessFinished();
+            fireStatusChanged("No temporal expressions detected in " + document.getName() + " in "
+                    + NumberFormat.getInstance().format((double)(System.currentTimeMillis() - execStartTime) / 1000)
+                    + " seconds!");
+            return;
+        }
+
         AnnotationSet outputAS = document.getAnnotations(outputASName);
         for (CoreMap cm : timexAnnsAll) {
             List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
             long startOffset = tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class);
             long endOffset =  tokens.get(tokens.size() - 1).get(CoreAnnotations.CharacterOffsetEndAnnotation.class);
+            fireProgressChanged((int) ((float) endOffset / docContentLength * 100));
             FeatureMap timex3Features = Factory.newFeatureMap();
             timex3Features.put("Type", cm.get(TimeExpression.Annotation.class).getTemporal().getTimexType().name());
             timex3Features.put("Value", cm.get(TimeExpression.Annotation.class).getTemporal().getTimexValue().toString());
@@ -114,5 +126,10 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
                 e.printStackTrace();
             }
         }
+
+        fireProcessFinished();
+        fireStatusChanged("Temporal expressions detected and normalized in " + document.getName() + " in "
+                + NumberFormat.getInstance().format((double)(System.currentTimeMillis() - execStartTime) / 1000)
+                + " seconds!");
     }
 }
