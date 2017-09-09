@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Properties;
 
 @CreoleResource(
-        name = "SUTime: Stanford Temporal Tagger",
+        name = "SUTime Stanford Temporal Tagger",
         icon = "SUTime.png",
         comment = "Annotate documents with TIMEX3 tags using the SUTime library."
 )
