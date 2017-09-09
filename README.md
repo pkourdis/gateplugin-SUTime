@@ -6,17 +6,17 @@ Angel X. Chang and Christopher D. Manning. 2012. [SUTIME: A Library for Recogniz
 
 ## Getting started
 
-Following these instructions will get you a working version of the plugin on your local machine.
+Following the instructions given below will get you a working version of the plugin on your local machine.
 
 ### Prerequisites
 
-1. [Download](https://gate.ac.uk/download/) and install the GATE software.
+1. [Download](https://gate.ac.uk/download/) and install the GATE software. $GATE_HOME refers to the GATE root directory.
 
-2. [Download](http://central.maven.org/maven2/de/jollyday/jollyday/0.4.9/jollyday-0.4.9.jar) the Jollyday library version 0.4.9 and place in it $GATEHOME/lib.
+2. [Download](http://central.maven.org/maven2/de/jollyday/jollyday/0.4.9/jollyday-0.4.9.jar) the Jollyday library version 0.4.9 and place in it $GATE_HOME/lib.
 
-3. [Download](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0.jar) the Stanford CoreNLP library and place it in $GATEHOME/lib.
+3. [Download](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0.jar) the Stanford CoreNLP library and place it in $GATE_HOME/lib.
 
-4. [Download](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0-models.jar) the Stanford CoreNLP models library and place it in $GATEHOME/lib.
+4. [Download](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0-models.jar) the Stanford CoreNLP models library and place it in $GATEH_HOME/lib.
 
 ### Installing
 

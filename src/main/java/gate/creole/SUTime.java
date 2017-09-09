@@ -12,24 +12,28 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.time.*;
 import edu.stanford.nlp.util.CoreMap;
-import gate.util.GateException;
 import gate.util.InvalidOffsetException;
-import org.joda.time.LocalDate;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+import java.io.IOException;
 import java.io.Serializable;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Properties;
-import java.net.URL;
-import java.io.File;
 
 @CreoleResource(
         name = "SUTime: Stanford Temporal Tagger",
         icon = "SUTime.png",
         comment = "Annotate documents with TIMEX3 tags using the SUTime library."
 )
-
 public class SUTime extends AbstractLanguageAnalyser implements ProcessingResource, Serializable {
 
     private String inputASName;
@@ -71,18 +75,24 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         return referenceDate;
     }
 
+    private static final ZoneId defaultZoneId = ZoneId.systemDefault();
+    private LocalDate creationTime = null;
+    private LocalDate lastAccessTime = null;
+    private LocalDate lastModifiedTime = null;
+
     @Override
     public void execute() throws ExecutionException {
 
         String docContent;
         int docContentLength;
         long execStartTime;
+        String refDate = null;
 
         execStartTime = System.currentTimeMillis();
         fireStatusChanged("Performing temporal tagging annotations with SUTime in " + document.getName());
         fireProgressChanged(0);
 
-        if(document == null) throw new ExecutionException("No document to process!");
+        if (document == null) throw new ExecutionException("No document to process!");
         docContent = document.getContent().toString();
         docContentLength = docContent.length();
 
@@ -91,14 +101,28 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         pipeline.addAnnotator(new TokenizerAnnotator(false));
         pipeline.addAnnotator(new TimeAnnotator("sutime", props));
 
-        LocalDate todaysDate;
+        setDocumentFileTimeStamps();
+
         if (referenceDate.equals("")) {
-            todaysDate = new LocalDate();
-            referenceDate = todaysDate.toString();
+        throw new ExecutionException("Empty reference date. Please provide a valid option.");
+        } else if (referenceDate.equals("today")) {
+            refDate = LocalDate.now().toString();
+        } else if (referenceDate.equals("CT") && creationTime != null ) {
+            refDate = creationTime.toString();
+        } else if (referenceDate.equals("CT") && creationTime == null ) {
+            throw new ExecutionException("Creation time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
+        } else if (referenceDate.equals("LT") && lastAccessTime != null ) {
+            refDate = lastAccessTime.toString();
+        } else if (referenceDate.equals("CT") && lastAccessTime == null ) {
+            throw new ExecutionException("Last access time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
+        } else if (referenceDate.equals("MT") && lastModifiedTime != null ) {
+            refDate = lastModifiedTime.toString();
+        } else if (referenceDate.equals("MT") && lastModifiedTime == null ) {
+            throw new ExecutionException("Last modified time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
         }
 
         Annotation annotation = new Annotation(docContent);
-        annotation.set(CoreAnnotations.DocDateAnnotation.class, referenceDate);
+        annotation.set(CoreAnnotations.DocDateAnnotation.class, refDate);
         pipeline.annotate(annotation);
 
         List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
@@ -131,5 +155,28 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         fireStatusChanged("Temporal expressions detected and normalized in " + document.getName() + " in "
                 + NumberFormat.getInstance().format((double)(System.currentTimeMillis() - execStartTime) / 1000)
                 + " seconds!");
+    }
+
+    private void setDocumentFileTimeStamps() {
+
+        Path file = null;
+        try {
+            LocalDateTime localDateTime;
+            file = Paths.get(document.getSourceUrl().toURI());
+            BasicFileAttributes attr = null;
+            attr = Files.readAttributes(file, BasicFileAttributes.class);
+            if (attr != null) {
+                localDateTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
+                creationTime = localDateTime.toLocalDate();
+                localDateTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
+                lastAccessTime = localDateTime.toLocalDate();
+                localDateTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
+                lastModifiedTime = localDateTime.toLocalDate();
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
