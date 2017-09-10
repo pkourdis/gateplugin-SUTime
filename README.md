@@ -42,6 +42,6 @@ The following runtime parameters are available:
 
 User should verify that file dates are supported by the operating system.
 
-# Release History
+## Release History
 
 * **Version 0.1 - September 10, 2017**: Initial working version.
