@@ -6,7 +6,7 @@
 
     <groupId>com.github.pkourdis.gatenlp.gateplugins</groupId>
     <artifactId>gateplugin-sutime</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
 
     <dependencies>
         <dependency>
