@@ -24,15 +24,15 @@ Download, unzip the file and place the folder inside the $GATE_HOME/plugins dire
 
 ## Usage
  
-`referenceDate`: a date in string format set by user as reference for normalizing temporal expressions found in the document. Permissible values are:
+`referenceDate`: a date (string format) set by user as reference for normalizing temporal expressions found in the document. Permissible values are:
 
 | Value  | Description |
 | -----  | ----------- |
-|  Date  | Dates provided in the formats "MM-dd-yyyy" and "yyyy-MM-dd". |
+|  Date (e.g. 01-20-2017)  | Date provided in the formats "MM-dd-yyyy" and "yyyy-MM-dd". |
 | today  | Today's date (default value). |
 | creationDate | Date file was created as recorded by the operating system. |
 | lastAccessDate | Date file was last accessed as recorded by the operating system. |
 | lastModifiedDate |Date file was last modified as recorded by the operating system. |
 
 
-User should verify that supported by the operating system and what is actually recorded in each variable.
+User should verify that supported by the operating system and what is actually recorded in each case.
