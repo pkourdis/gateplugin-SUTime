@@ -22,8 +22,14 @@ The folowwing libraries should be placed inside the $GATE_HOME/lib directory:
 Download, unzip the file and place the folder inside the $GATE_HOME/plugins directory.
 
 ## Usage
+
+The following runtime parameters are available:
+
+`inputASName`: No usage (future releases).
+
+`outputASName`: Name of the annotation set to write the TIMEX3 annotations.
  
-`referenceDate`: a date set by user as reference for normalizing temporal expressions. Permissible values are:
+`referenceDate`: A date set by the user as reference for normalizing temporal expressions. Permissible values are:
 
 | Value  | Description |
 | -----  | ----------- |
@@ -35,3 +41,7 @@ Download, unzip the file and place the folder inside the $GATE_HOME/plugins dire
 
 
 User should verify that file dates are supported by the operating system.
+
+# Release History
+
+* **Version 0.1 - September 10, 2017**: Initial working version.
