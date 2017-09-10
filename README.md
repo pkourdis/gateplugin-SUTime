@@ -44,4 +44,5 @@ User should verify that file dates are supported by the operating system.
 
 ## Release History
 
+* **Version 0.2 - September 10, 2017**: Minor corrections to initial version.
 * **Version 0.1 - September 10, 2017**: Initial working version.
