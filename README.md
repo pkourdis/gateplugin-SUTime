@@ -6,17 +6,16 @@ Angel X. Chang and Christopher D. Manning. 2012. [SUTIME: A Library for Recogniz
 
 ## Getting Up and Running
 
-Following the instructions given below will get you a working version of the plugin on your local machine.
+Following the instructions given below will get you a working version of the plugin on your local machine. It is assumed that GATE software is installed ([download here](https://gate.ac.uk/download/)) and $GATE_HOME refers to the GATE root directory.
 
 ### Prerequisites
 
-- [Download](https://gate.ac.uk/download/) and install the GATE software. $GATE_HOME refers to the GATE root directory.
+The folowwing libraries should be placed inside inside $GATE_HOME/lib directory: 
+- Jollyday library (version 0.4.9) ([download here](http://central.maven.org/maven2/de/jollyday/jollyday/0.4.9/jollyday-0.4.9.jar) ).
 
-- [Download](http://central.maven.org/maven2/de/jollyday/jollyday/0.4.9/jollyday-0.4.9.jar) the Jollyday library (version 0.4.9) and place it inside $GATE_HOME/lib directory.
+- Stanford CoreNLP library ([download here](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0.jar)).
 
-- [Download](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0.jar) the Stanford CoreNLP library and place it inside $GATE_HOME/lib directory.
-
-- [Download](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0-models.jar) the Stanford CoreNLP models library and place it inside $GATEH_HOME/lib directory.
+- Stanford CoreNLP models ([download here](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0-models.jar)).
 
 ### Installation
 
@@ -24,15 +23,15 @@ Download, unzip the file and place the folder inside the $GATE_HOME/plugins dire
 
 ## Usage
  
-`referenceDate`: a date (string format) set by user as reference for normalizing temporal expressions found in the document. Permissible values are:
+`referenceDate`: a date set by user as reference for normalizing temporal expressions. Permissible values are:
 
 | Value  | Description |
 | -----  | ----------- |
-|  Date (e.g. 01-20-2017)  | Date provided in the formats "MM-dd-yyyy" and "yyyy-MM-dd". |
+|  01-20-2017  | Date provided in the formats "MM-dd-yyyy" and "yyyy-MM-dd". |
 | today  | Today's date (default value). |
 | creationDate | Date file was created as recorded by the operating system. |
 | lastAccessDate | Date file was last accessed as recorded by the operating system. |
 | lastModifiedDate |Date file was last modified as recorded by the operating system. |
 
 
-User should verify that supported by the operating system and what is actually recorded in each case.
+User should verify that file dates are supported by the operating system.
