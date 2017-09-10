@@ -83,19 +83,14 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     @Override
     public void execute() throws ExecutionException {
-
-        String docContent;
-        int docContentLength;
-        long execStartTime;
-        String refDate;
-
-        execStartTime = System.currentTimeMillis();
+        
+        long execStartTime = System.currentTimeMillis();
         fireStatusChanged("Performing temporal tagging annotations with SUTime in " + document.getName());
         fireProgressChanged(0);
 
         if (document == null) throw new ExecutionException("No document to process!");
-        docContent = document.getContent().toString();
-        docContentLength = docContent.length();
+        String docContent = document.getContent().toString();
+        int docContentLength = docContent.length();
 
         Properties props = new Properties();
         AnnotationPipeline pipeline = new AnnotationPipeline();
@@ -103,7 +98,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         pipeline.addAnnotator(new TimeAnnotator("sutime", props));
 
         setDocumentFileTimeStamps();
-        refDate = referenceDate;
+        String refDate = referenceDate;
         if (refDate.equals("")) {
         throw new ExecutionException("Empty reference date. Please provide a valid option.");
         } else if (refDate.equals("today")) {
