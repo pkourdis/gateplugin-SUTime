@@ -10,13 +10,13 @@ Following the instructions given below will get you a working version of the plu
 
 ### Prerequisites
 
-1. [Download](https://gate.ac.uk/download/) and install the GATE software. $GATE_HOME refers to the GATE root directory.
+- [Download](https://gate.ac.uk/download/) and install the GATE software. $GATE_HOME refers to the GATE root directory.
 
-2. [Download](http://central.maven.org/maven2/de/jollyday/jollyday/0.4.9/jollyday-0.4.9.jar) the Jollyday library (version 0.4.9) and place it inside $GATE_HOME/lib directory.
+- [Download](http://central.maven.org/maven2/de/jollyday/jollyday/0.4.9/jollyday-0.4.9.jar) the Jollyday library (version 0.4.9) and place it inside $GATE_HOME/lib directory.
 
-3. [Download](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0.jar) the Stanford CoreNLP library and place it inside $GATE_HOME/lib directory.
+- [Download](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0.jar) the Stanford CoreNLP library and place it inside $GATE_HOME/lib directory.
 
-4. [Download](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0-models.jar) the Stanford CoreNLP models library and place it inside $GATEH_HOME/lib directory.
+- [Download](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0-models.jar) the Stanford CoreNLP models library and place it inside $GATEH_HOME/lib directory.
 
 ### Installation
 
@@ -24,12 +24,15 @@ Download, unzip the file and place the folder inside the $GATE_HOME/plugins dire
 
 ## Usage
  
-A reference date can be set by the user for normalizing temporal expressions found in the document. Permissible values for the string variable referenceDate are:
+A reference date can be set by the user for normalizing temporal expressions found in the document. Permissible values for the string variable `referenceDate` are:
 
-1. Dates provided in the format: "MM-dd-yyyy" and "yyyy-MM-dd".
-2. today (default value). 
-3. creationDate (Date file was created as recorded by the operating system).
-4. lastAccessDate (Date file was last accessed as recorded by the operating system).
-5. lastModifiedDate (Date file was last modified as recorded by the operating system).
+| Value  | Description |
+| -----  | ----------- |
+|  Date  | Dates provided in the formats "MM-dd-yyyy" and "yyyy-MM-dd". |
+| today  | Today's date (default value) |
+| creationDate | Date file was created as recorded by the operating system |
+| lastAccessDate | Date file was last accessed as recorded by the operating system |
+| lastModifiedDate |Date file was last modified as recorded by the operating system. |
 
-User should verify that 3-5 are supported by his operating system.
+
+User should verify that 3-5 are supported by the operating system and what is actually recorded in each variable.
