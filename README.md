@@ -10,12 +10,12 @@ Following the instructions given below will get you a working version of the plu
 
 ### Prerequisites
 
-The folowwing libraries should be placed inside inside $GATE_HOME/lib directory: 
-- Jollyday library (version 0.4.9) ([download here](http://central.maven.org/maven2/de/jollyday/jollyday/0.4.9/jollyday-0.4.9.jar) ).
+The folowwing libraries should be placed inside the $GATE_HOME/lib directory: 
+- Jollyday library (version 0.4.9) ([download here](http://central.maven.org/maven2/de/jollyday/jollyday/0.4.9/jollyday-0.4.9.jar)).
 
 - Stanford CoreNLP library ([download here](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0.jar)).
 
-- Stanford CoreNLP models ([download here](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0-models.jar)).
+- Stanford CoreNLP models library ([download here](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0-models.jar)).
 
 ### Installation
 
