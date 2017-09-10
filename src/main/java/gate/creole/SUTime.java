@@ -66,7 +66,8 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "Reference date of the document.", defaultValue = "")
+    @CreoleParameter(comment = "Reference date of the document. Permissible date formats 'MM-dd-yyyy', 'yyyy-MM-dd', 'today': today's date, 'creationDate': date file was created, " +
+            "'lastAccessDate': date file was last accessed, 'lastModifiedDate': date file was last modified.", defaultValue = "today")
     public void setReferenceDate(String date) {
         referenceDate = date;
     }
@@ -76,9 +77,9 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     }
 
     private static final ZoneId defaultZoneId = ZoneId.systemDefault();
-    private LocalDate creationTime = null;
-    private LocalDate lastAccessTime = null;
-    private LocalDate lastModifiedTime = null;
+    private LocalDate creationDate = null;
+    private LocalDate lastAccessDate = null;
+    private LocalDate lastModifiedDate = null;
 
     @Override
     public void execute() throws ExecutionException {
@@ -107,17 +108,17 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         throw new ExecutionException("Empty reference date. Please provide a valid option.");
         } else if (refDate.equals("today")) {
             refDate = LocalDate.now().toString();
-        } else if (refDate.equals("CT") && creationTime != null ) {
-            refDate = creationTime.toString();
-        } else if (refDate.equals("CT") && creationTime == null ) {
+        } else if (refDate.equals("creationDate") && creationDate != null ) {
+            refDate = creationDate.toString();
+        } else if (refDate.equals("creationDate") && creationDate == null ) {
             throw new ExecutionException("Creation time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
-        } else if (refDate.equals("LT") && lastAccessTime != null ) {
-            refDate = lastAccessTime.toString();
-        } else if (refDate.equals("CT") && lastAccessTime == null ) {
+        } else if (refDate.equals("lastAccessDate") && lastAccessDate != null ) {
+            refDate = lastAccessDate.toString();
+        } else if (refDate.equals("lastAccessDate") && lastAccessDate == null ) {
             throw new ExecutionException("Last access time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
-        } else if (refDate.equals("MT") && lastModifiedTime != null ) {
-            refDate = lastModifiedTime.toString();
-        } else if (refDate.equals("MT") && lastModifiedTime == null ) {
+        } else if (refDate.equals("lastModifiedDate") && lastModifiedDate != null ) {
+            refDate = lastModifiedDate.toString();
+        } else if (refDate.equals("lastModifiedDate") && lastModifiedDate == null ) {
             throw new ExecutionException("Last modified time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
         }
 
@@ -142,7 +143,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
             fireProgressChanged((int) ((float) endOffset / docContentLength * 100));
             FeatureMap timex3Features = Factory.newFeatureMap();
             timex3Features.put("Type", cm.get(TimeExpression.Annotation.class).getTemporal().getTimexType().name());
-            timex3Features.put("Value", cm.get(TimeExpression.Annotation.class).getTemporal().getTimexValue().toString());
+            timex3Features.put("Value", cm.get(TimeExpression.Annotation.class).getTemporal().getTimexValue());
             try {
                 outputAS.add(startOffset, endOffset, "TIMEX3", timex3Features);
             } catch (InvalidOffsetException e) {
@@ -164,15 +165,13 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
             BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
             if (attr != null) {
                 localDateTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
-                creationTime = localDateTime.toLocalDate();
+                creationDate = localDateTime.toLocalDate();
                 localDateTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
-                lastAccessTime = localDateTime.toLocalDate();
+                lastAccessDate = localDateTime.toLocalDate();
                 localDateTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
-                lastModifiedTime = localDateTime.toLocalDate();
+                lastModifiedDate = localDateTime.toLocalDate();
             }
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
     }
