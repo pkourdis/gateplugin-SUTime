@@ -83,7 +83,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     @Override
     public void execute() throws ExecutionException {
-        
+
         long execStartTime = System.currentTimeMillis();
         fireStatusChanged("Performing temporal tagging annotations with SUTime in " + document.getName());
         fireProgressChanged(0);
