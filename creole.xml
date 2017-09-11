@@ -1,4 +1,4 @@
 <!-- creole.xml for SUTime -->
 <CREOLE-DIRECTORY>
-    <JAR SCAN="true">gateplugin-SUTime.jar</JAR>
+    <JAR SCAN="true">gateplugin-sutime.jar</JAR>
 </CREOLE-DIRECTORY>
