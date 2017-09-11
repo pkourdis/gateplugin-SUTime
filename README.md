@@ -42,6 +42,12 @@ The following runtime parameters are available:
 
 User should verify that file dates are supported by the operating system.
 
+## Example
+
+Screenshot from GATE Developer:
+
+![Screenshot](https://user-images.githubusercontent.com/11142121/30256611-ef21e2e0-9660-11e7-9d02-8de678894b1a.png)
+
 ## Release History
 
 * **Version 0.2 - September 10, 2017**: Minor corrections to initial version.
