@@ -19,7 +19,7 @@ The folowwing libraries should be placed inside the $GATE_HOME/lib directory:
 
 ### Installation
 
-[Download](https://github.com/pkourdis/gateplugin-SUTime/files/1290880/Tagger_SUTime.zip), unzip the file and place the folder inside the $GATE_HOME/plugins directory.
+Download the latest version from [here](https://github.com/pkourdis/gateplugin-SUTime/releases), unzip the file and place the folder inside the $GATE_HOME/plugins directory.
 
 ## Usage
 
