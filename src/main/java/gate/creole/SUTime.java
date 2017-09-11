@@ -66,8 +66,8 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "Reference date of the document. Permissible date formats 'MM-dd-yyyy', 'yyyy-MM-dd', 'today': today's date, 'creationDate': date file was created, " +
-            "'lastAccessDate': date file was last accessed, 'lastModifiedDate': date file was last modified.", defaultValue = "today")
+    @CreoleParameter(comment = "Reference date of the document. Permissible date values are 'YYYY-MM-DD', 'today' (today's date), 'creationDate' (date file was created), " +
+            "'lastAccessDate' (date file was last accessed) and 'lastModifiedDate' (date file was last modified).", defaultValue = "today")
     public void setReferenceDate(String date) {
         referenceDate = date;
     }
