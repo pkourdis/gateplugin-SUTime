@@ -6,11 +6,11 @@ Angel X. Chang and Christopher D. Manning. 2012. [SUTIME: A Library for Recogniz
 
 ## Getting Up and Running
 
-Following the instructions given below will get you a working version of the plugin on your local machine. It is assumed that GATE software is installed ([download here](https://gate.ac.uk/download/)) and $GATE_HOME refers to the GATE root directory.
+The instructions given below will get you a working version of the plugin on your local machine. It is assumed that GATE software is installed ([download here](https://gate.ac.uk/download/)) and $GATE_HOME refers to the GATE root directory.
 
 ### Prerequisites
 
-The folowwing libraries should be placed inside the $GATE_HOME/lib directory: 
+The following libraries should be placed inside the $GATE_HOME/lib directory: 
 - Jollyday library (version 0.4.9) ([download here](http://central.maven.org/maven2/de/jollyday/jollyday/0.4.9/jollyday-0.4.9.jar)).
 
 - Stanford CoreNLP library ([download here](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0.jar)).
