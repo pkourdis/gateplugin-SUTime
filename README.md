@@ -1,14 +1,16 @@
 # gateplugin-SUTime
 
+## 1. About
+
 A [GATE](https://gate.ac.uk) processing resource plugin to annotate documents with [TIMEML's TIMEX3](http://www.timeml.org/tempeval2/tempeval2-trial/guidelines/timex3guidelines-072009.pdf) tags using the Stanford Temporal Tagger [SUTime](https://nlp.stanford.edu/software/sutime.shtml) Java library. SUTime is a deterministic rule-based temporal tagger for recognizing and normalizing temporal expressions developed by the [Stanford NLP Group](https://nlp.stanford.edu). It is described in detail in the paper: 
 
 Angel X. Chang and Christopher D. Manning. 2012. [SUTIME: A Library for Recognizing and Normalizing Time Expressions](https://nlp.stanford.edu/pubs/lrec2012-sutime.pdf). *8th International Conference on Language Resources and Evaluation (LREC 2012).*
 
-## Getting Up and Running
+## 2. Getting Up and Running
 
 The instructions given below will get you a working version of the plugin on your local machine. It is assumed that GATE software is installed ([download here](https://gate.ac.uk/download/)) and $GATE_HOME refers to the GATE root directory.
 
-### Prerequisites
+### 2.1 Prerequisites
 
 The following libraries should be placed inside the $GATE_HOME/lib directory: 
 - Jollyday library (version 0.4.9) ([download here](http://central.maven.org/maven2/de/jollyday/jollyday/0.4.9/jollyday-0.4.9.jar)).
@@ -17,11 +19,11 @@ The following libraries should be placed inside the $GATE_HOME/lib directory:
 
 - Stanford CoreNLP models library ([download here](http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.8.0/stanford-corenlp-3.8.0-models.jar)).
 
-### Installation
+### 2.2 Installation
 
 Download the latest version [from here](https://github.com/pkourdis/gateplugin-SUTime/releases), unzip the file and place the folder inside the $GATE_HOME/plugins directory.
 
-## Usage
+## 3. Usage
 
 The following runtime parameters are available:
 
@@ -42,13 +44,13 @@ The following runtime parameters are available:
 
 User should verify that file dates are supported by the operating system.
 
-## Example
+## 4. Example
 
 Screenshot from GATE Developer:
 
 ![Screenshot](https://user-images.githubusercontent.com/11142121/30256611-ef21e2e0-9660-11e7-9d02-8de678894b1a.png)
 
-## Release History
+## 5. Release History
 
 * **Version 0.2 - September 10, 2017**: Minor corrections to initial version.
 * **Version 0.1 - September 10, 2017**: Initial working version.
