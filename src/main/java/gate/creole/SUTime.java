@@ -97,7 +97,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         pipeline.addAnnotator(new TokenizerAnnotator(false));
         pipeline.addAnnotator(new TimeAnnotator("sutime", props));
 
-        setDocumentFileTimeStamps();
+        setDocumentFileDates();
         String refDate = referenceDate;
         if (refDate.equals("")) {
         throw new ExecutionException("Empty reference date. Please provide a valid option.");
@@ -152,7 +152,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
                 + " seconds!");
     }
 
-    private void setDocumentFileTimeStamps() {
+    private void setDocumentFileDates() {
 
         try {
             LocalDateTime localDateTime;
