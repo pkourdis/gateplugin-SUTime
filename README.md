@@ -52,5 +52,6 @@ Screenshot from GATE Developer:
 
 ## 5. Release History
 
+* **Version 0.3 - September 12, 2017**: Improve reference date handling. 
 * **Version 0.2 - September 10, 2017**: Minor corrections to initial version.
 * **Version 0.1 - September 10, 2017**: Initial working version.
