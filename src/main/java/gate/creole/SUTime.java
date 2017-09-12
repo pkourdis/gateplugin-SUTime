@@ -120,8 +120,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
                 setFileDate(refDate);
                 if (fileDate != null) { refDate = fileDate; }
                 else { // user asked for file's date as reference date but it is null
-                    throw new ExecutionException(refDate + " is null for " + document.getName() +
-                            ". Skipping temporal tagging for this document.");
+                    throw new ExecutionException(refDate + " is null for " + document.getName());
                 }
                 break;
             default:
