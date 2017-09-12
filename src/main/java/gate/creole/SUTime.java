@@ -14,6 +14,8 @@ import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.time.*;
 import edu.stanford.nlp.util.CoreMap;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.net.URISyntaxException;
@@ -86,6 +89,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     }
 
     private static final ZoneId defaultZoneId = ZoneId.systemDefault();
+    private static final String dateFormat = "YYYY-MM-DD";
     private String fileDate = null;
 
     @Override
@@ -122,6 +126,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
                 break;
             default:
                 // TODO check if it is a valid "YYYY-MM-DD'" date
+                if (!isDateValid(refDate)) throw new ExecutionException(refDate + "is not a valid date.");
                 break;
         }
 
@@ -193,5 +198,32 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     *  Check if date is a valid date with the appropriate format.
+     *
+     *
+     * @param dateToValidate The date as string to be validated.
+     */
+    private boolean isDateValid(String dateToValidate){
+
+        if(dateToValidate == null){
+            return false;
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+        simpleDateFormat.setLenient(false);
+
+        try {
+            Date date = simpleDateFormat.parse(dateToValidate);
+            System.out.println(date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 }
