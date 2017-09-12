@@ -73,8 +73,8 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "Reference date of the document. Permissible date values are 'YYYY-MM-DD', 'today' (today's date), 'creationDate' (date file was created), " +
-            "'lastAccessDate' (date file was last accessed) and 'lastModifiedDate' (date file was last modified).", defaultValue = "today")
+    @CreoleParameter(comment = "Reference date of the document. Permissible date values are 'YYYY-MM-DD', 'today' (today's date), 'fileCreationDate' (date file was created), " +
+            "'fileLastAccessDate' (date file was last accessed) and 'fileLastModifiedDate' (date file was last modified).", defaultValue = "today")
     public void setReferenceDate(String date) {
         referenceDate = date;
     }
@@ -84,9 +84,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     }
 
     private static final ZoneId defaultZoneId = ZoneId.systemDefault();
-    private LocalDate creationDate = null; // file's creation date
-    private LocalDate lastAccessDate = null; // file's last access date
-    private LocalDate lastModifiedDate = null; // file's last modified date
+    private String fileDate = null;
 
     @Override
     public void execute() throws ExecutionException {
@@ -104,35 +102,26 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         pipeline.addAnnotator(new TokenizerAnnotator(false));
         pipeline.addAnnotator(new TimeAnnotator("sutime", props));
 
-        setDocumentFileDates(); // set dates for the document based on the file
         String refDate = referenceDate;
-        if (refDate.equals("")) {
-            // no reference date provided by the user
-            throw new ExecutionException("Empty reference date. Please provide a valid option.");
-        } else if (refDate.equals("today")) {
-            // reference date is today's date
-            refDate = LocalDate.now().toString();
-        } else if (refDate.equals("creationDate") && creationDate != null ) {
-            // reference date is file's creation date
-            refDate = creationDate.toString();
-        } else if (refDate.equals("creationDate") && creationDate == null ) {
-            // user asked for file's creation date but it is null
-            throw new ExecutionException("Creation time cannot be determined for " + document.getName() +
-                    ". Skipping temporal tagging for this document.");
-        } else if (refDate.equals("lastAccessDate") && lastAccessDate != null ) {
-            // reference date is file's last access date
-            refDate = lastAccessDate.toString();
-        } else if (refDate.equals("lastAccessDate") && lastAccessDate == null ) {
-            // user asked for file's last access date but it is null
-            throw new ExecutionException("Last access time cannot be determined for " + document.getName() +
-                    ". Skipping temporal tagging for this document.");
-        } else if (refDate.equals("lastModifiedDate") && lastModifiedDate != null ) {
-            // reference date is file's last modification date
-            refDate = lastModifiedDate.toString();
-        } else if (refDate.equals("lastModifiedDate") && lastModifiedDate == null ) {
-            // user asked for file's last modification date but it is null
-            throw new ExecutionException("Last modified time cannot be determined for " + document.getName() +
-                    ". Skipping temporal tagging for this document.");
+        switch (refDate) {
+            case "": // no reference date provided by the user
+                throw new ExecutionException("No reference date provided. Please give a valid option.");
+            case "today": // user asked for today's date as reference date
+                refDate = LocalDate.now().toString();
+                break;
+            case "fileCreationDate": // user asked for file's creation date as reference date
+            case "fileLastAccessDate": // user asked for file's last access date as reference date
+            case "fileLastModifiedDate": // user asked for file's lat modification date as reference date
+                setFileDate(refDate);
+                if (fileDate != null) { refDate = fileDate; }
+                else { // user asked for file's date as reference date but it is null
+                    throw new ExecutionException(refDate + " is null for " + document.getName() +
+                            ". Skipping temporal tagging for this document.");
+                }
+                break;
+            default:
+                // TODO check if it is a valid "YYYY-MM-DD'" date
+                break;
         }
 
         Annotation annotation = new Annotation(docContent);
@@ -172,22 +161,25 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     }
 
     /**
-     * Sets the creation, last access and last modified dates of the file.
+     * Sets as file date its creation, last access or last modification date.
      *
+     * @param fDate A string with value "fileCreationDate", or "fileLastAccessDate" or "fileLastModifiedDate".
      */
-    private void setDocumentFileDates() {
+    private void setFileDate(String fDate) {
 
         try {
-            LocalDateTime localDateTime;
             Path file = Paths.get(document.getSourceUrl().toURI());
             BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
-            if (attr != null) {
-                localDateTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
-                creationDate = localDateTime.toLocalDate();
-                localDateTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
-                lastAccessDate = localDateTime.toLocalDate();
-                localDateTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
-                lastModifiedDate = localDateTime.toLocalDate();
+            if (attr != null && fDate.equals("fileCreationDate")) {
+                LocalDateTime localDateTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
+                fileDate = localDateTime.toLocalDate().toString();
+            } else if (attr != null && fDate.equals("fileLastAccessDate")) {
+                LocalDateTime localDateTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
+                fileDate = localDateTime.toLocalDate().toString();
+            }
+            else if (attr != null && fDate.equals("fileLastModifiedDate")) {
+                LocalDateTime localDateTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
+                fileDate = localDateTime.toLocalDate().toString();
             }
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
