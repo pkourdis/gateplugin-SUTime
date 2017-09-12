@@ -200,19 +200,19 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     }
 
     /**
-     *  Check if date is a valid with the appropriate format.
-     *
+     * Check if date is a valid with the right format.
      *
      * @param dateToValidate The date as string to be validated.
+     * @return True if date is valid and in right format else false.
      */
     private boolean isDateValid(String dateToValidate){
 
         if (dateToValidate == null) return false;
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-        simpleDateFormat.setLenient(false); // makes the parse method below throw exception if not in the specified format
+        simpleDateFormat.setLenient(false); // makes the parse method below throw exception
 
-        try { // if it is not a valid date it will throw a ParseException
+        try { // if it is not a valid date with the right format it will throw a ParseException
             Date date = simpleDateFormat.parse(dateToValidate);
             System.out.println(date);
 
