@@ -1,33 +1,32 @@
 package gate.creole;
 
-import edu.stanford.nlp.pipeline.Annotation;
 import gate.*;
 import gate.creole.metadata.CreoleResource;
 import gate.creole.metadata.CreoleParameter;
 import gate.creole.metadata.Optional;
 import gate.creole.metadata.RunTime;
+import gate.util.InvalidOffsetException;
 
+import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.time.*;
 import edu.stanford.nlp.util.CoreMap;
-import gate.util.InvalidOffsetException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Properties;
+import java.net.URISyntaxException;
+import java.text.NumberFormat;
 
 /**
  * A processing resource for GATE Developer implementing the SUTime library for temporal tagging.
