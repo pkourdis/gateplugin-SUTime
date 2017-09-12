@@ -125,8 +125,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
                 }
                 break;
             default:
-                // TODO check if it is a valid "YYYY-MM-DD'" date
-                if (!isDateValid(refDate)) throw new ExecutionException(refDate + "is not a valid date.");
+                if (!isDateValid(refDate)) throw new ExecutionException(refDate + "is not a valid date or formatted as 'YYYY-MM-DD'.");
                 break;
         }
 
@@ -201,21 +200,19 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     }
 
     /**
-     *  Check if date is a valid date with the appropriate format.
+     *  Check if date is a valid with the appropriate format.
      *
      *
      * @param dateToValidate The date as string to be validated.
      */
     private boolean isDateValid(String dateToValidate){
 
-        if(dateToValidate == null){
-            return false;
-        }
+        if (dateToValidate == null) return false;
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         simpleDateFormat.setLenient(false);
 
-        try {
+        try { // if it is not a valid date it will throw a ParseException
             Date date = simpleDateFormat.parse(dateToValidate);
             System.out.println(date);
 
