@@ -73,8 +73,8 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "Reference date of the document. Permissible date values are 'YYYY-MM-DD', 'today' (today's date), 'fileCreationDate' (date file was created), " +
-            "'fileLastAccessDate' (date file was last accessed) and 'fileLastModifiedDate' (date file was last modified).", defaultValue = "today")
+    @CreoleParameter(comment = "Reference date of the document. Permissible date values are 'YYYY-MM-DD', 'today' (today's date), 'creationDate' (date file was created), " +
+            "'lastAccessDate' (date file was last accessed) and 'lastModifiedDate' (date file was last modified).", defaultValue = "today")
     public void setReferenceDate(String date) {
         referenceDate = date;
     }
@@ -109,9 +109,9 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
             case "today": // user asked for today's date as reference date
                 refDate = LocalDate.now().toString();
                 break;
-            case "fileCreationDate": // user asked for file's creation date as reference date
-            case "fileLastAccessDate": // user asked for file's last access date as reference date
-            case "fileLastModifiedDate": // user asked for file's lat modification date as reference date
+            case "CreationDate": // user asked for file's creation date as reference date
+            case "LastAccessDate": // user asked for file's last access date as reference date
+            case "LastModifiedDate": // user asked for file's lat modification date as reference date
                 setFileDate(refDate);
                 if (fileDate != null) { refDate = fileDate; }
                 else { // user asked for file's date as reference date but it is null
@@ -170,14 +170,14 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         try {
             Path file = Paths.get(document.getSourceUrl().toURI());
             BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
-            if (attr != null && fDate.equals("fileCreationDate")) {
+            if (attr != null && fDate.equals("creationDate")) {
                 LocalDateTime localDateTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
                 fileDate = localDateTime.toLocalDate().toString();
-            } else if (attr != null && fDate.equals("fileLastAccessDate")) {
+            } else if (attr != null && fDate.equals("lastAccessDate")) {
                 LocalDateTime localDateTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
                 fileDate = localDateTime.toLocalDate().toString();
             }
-            else if (attr != null && fDate.equals("fileLastModifiedDate")) {
+            else if (attr != null && fDate.equals("lastModifiedDate")) {
                 LocalDateTime localDateTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
                 fileDate = localDateTime.toLocalDate().toString();
             }
