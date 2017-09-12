@@ -29,6 +29,11 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * A processing resource for GATE Developer implementing the SUTime library for temporal tagging.
+ *
+ * @author Panagiotis Kourdis <kourdis@gmail.com>
+ */
 @CreoleResource(
         name = "SUTime Stanford Temporal Tagger",
         icon = "SUTime.png",
@@ -36,6 +41,7 @@ import java.util.Properties;
 )
 public class SUTime extends AbstractLanguageAnalyser implements ProcessingResource, Serializable {
 
+    // name of the annotation set to be used as input
     private String inputASName;
 
     @RunTime
@@ -49,6 +55,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         return inputASName;
     }
 
+    // name of the annotation set to be used for output (i.e. write the TIME3X tags)
     private String outputASName;
 
     @RunTime
@@ -62,6 +69,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         return outputASName;
     }
 
+    // reference date to be used for normalization
     private String referenceDate;
 
     @RunTime
@@ -84,7 +92,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     @Override
     public void execute() throws ExecutionException {
 
-        long execStartTime = System.currentTimeMillis();
+        long execStartTime = System.currentTimeMillis(); // start time
         fireStatusChanged("Performing temporal tagging annotations with SUTime in " + document.getName());
         fireProgressChanged(0);
 
@@ -97,7 +105,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         pipeline.addAnnotator(new TokenizerAnnotator(false));
         pipeline.addAnnotator(new TimeAnnotator("sutime", props));
 
-        setDocumentFileDates();
+        setDocumentFileDates(); // set dates for the document based on the file
         String refDate = referenceDate;
         if (refDate.equals("")) {
         throw new ExecutionException("Empty reference date. Please provide a valid option.");
@@ -152,6 +160,10 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
                 + " seconds!");
     }
 
+    /**
+     * Sets the creation, last access and last modified dates of the file.
+     *
+     */
     private void setDocumentFileDates() {
 
         try {
