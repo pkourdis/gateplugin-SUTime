@@ -76,7 +76,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "Reference date of the document. Permissible date values are 'YYYY-MM-DD', " +
+    @CreoleParameter(comment = "Reference date of the document. Permissible date values are 'yyyy-MM-dd', " +
             "'today' (today's date), 'creationDate' (date file was created), " +
             "'lastAccessDate' (date file was last accessed) and 'lastModifiedDate' (date file was last modified).",
             defaultValue = "today")
@@ -89,7 +89,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     }
 
     private static final ZoneId defaultZoneId = ZoneId.systemDefault();
-    private static final String dateFormat = "YYYY-MM-DD";
+    private static final String dateFormat = "yyyy-MM-dd";
     private String fileDate = null;
 
     @Override
@@ -125,7 +125,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
                 }
                 break;
             default:
-                if (!isDateValid(refDate)) throw new ExecutionException(refDate + "is not a valid date or formatted as 'YYYY-MM-DD'.");
+                if (!isDateValid(refDate)) throw new ExecutionException(refDate + " is not a valid date or formatted as 'yyyy-MM-dd'.");
                 break;
         }
 
