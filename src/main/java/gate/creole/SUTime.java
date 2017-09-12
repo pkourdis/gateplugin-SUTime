@@ -92,18 +92,17 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     public void execute() throws ExecutionException {
 
         long execStartTime = System.currentTimeMillis(); // start time
+
+        // update GATE
         fireStatusChanged("Performing temporal tagging annotations with SUTime in " + document.getName());
         fireProgressChanged(0);
 
+        // document information
         if (document == null) throw new ExecutionException("No document to process!");
         String docContent = document.getContent().toString(); // document's content
         int docContentLength = docContent.length(); // length of document's content
 
-        Properties props = new Properties();
-        AnnotationPipeline pipeline = new AnnotationPipeline();
-        pipeline.addAnnotator(new TokenizerAnnotator(false));
-        pipeline.addAnnotator(new TimeAnnotator("sutime", props));
-
+        // set reference date
         String refDate = referenceDate;
         switch (refDate) {
             case "": // no reference date provided by the user
@@ -111,9 +110,9 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
             case "today": // user asked for today's date as reference date
                 refDate = LocalDate.now().toString();
                 break;
-            case "CreationDate": // user asked for file's creation date as reference date
-            case "LastAccessDate": // user asked for file's last access date as reference date
-            case "LastModifiedDate": // user asked for file's lat modification date as reference date
+            case "creationDate": // user asked for file's creation date as reference date
+            case "lastAccessDate": // user asked for file's last access date as reference date
+            case "lastModifiedDate": // user asked for file's lat modification date as reference date
                 setFileDate(refDate);
                 if (fileDate != null) { refDate = fileDate; }
                 else { // user asked for file's date as reference date but it is null
@@ -125,6 +124,12 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
                 // TODO check if it is a valid "YYYY-MM-DD'" date
                 break;
         }
+
+        // SUTime part
+        Properties props = new Properties();
+        AnnotationPipeline pipeline = new AnnotationPipeline();
+        pipeline.addAnnotator(new TokenizerAnnotator(false));
+        pipeline.addAnnotator(new TimeAnnotator("sutime", props));
 
         Annotation annotation = new Annotation(docContent);
         annotation.set(CoreAnnotations.DocDateAnnotation.class, refDate);
@@ -140,6 +145,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
             return;
         }
 
+        // write TIMEX3 annotations
         AnnotationSet outputAS = document.getAnnotations(outputASName);
         for (CoreMap cm : timexAnnsAll) {
             List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
@@ -156,6 +162,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
             }
         }
 
+        // update GATE
         fireProcessFinished();
         fireStatusChanged("Temporal expressions detected and normalized in " + document.getName() + " in "
                 + NumberFormat.getInstance().format((double)(System.currentTimeMillis() - execStartTime) / 1000)
