@@ -35,7 +35,7 @@ The following runtime parameters are available:
 
 | Value  | Description |
 | -----  | ----------- |
-|  2017-08-25  | Date provided in "YYYY-MM-DD" format. |
+|  2017-08-25  | Date provided in "yyy-MM-dd" format. |
 | today  | Today's date (default value). |
 | creationDate | Date file was created as recorded by the operating system. |
 | lastAccessDate | Date file was last accessed as recorded by the operating system. |
