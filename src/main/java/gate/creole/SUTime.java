@@ -175,7 +175,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     /**
      * Sets as file date its creation, or last access or last modification date.
      *
-     * @param fDate A string with value "fileCreationDate", or "fileLastAccessDate" or "fileLastModifiedDate".
+     * @param fDate A string with value "creationDate", or "lastAccessDate" or "lastModifiedDate".
      */
     private void setFileDate(String fDate) {
 
