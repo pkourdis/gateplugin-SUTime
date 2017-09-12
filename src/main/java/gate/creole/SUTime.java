@@ -107,21 +107,32 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         setDocumentFileDates(); // set dates for the document based on the file
         String refDate = referenceDate;
         if (refDate.equals("")) {
-        throw new ExecutionException("Empty reference date. Please provide a valid option.");
+            // no reference date provided by the user
+            throw new ExecutionException("Empty reference date. Please provide a valid option.");
         } else if (refDate.equals("today")) {
+            // reference date is today's date
             refDate = LocalDate.now().toString();
         } else if (refDate.equals("creationDate") && creationDate != null ) {
+            // reference date is file's creation date
             refDate = creationDate.toString();
         } else if (refDate.equals("creationDate") && creationDate == null ) {
-            throw new ExecutionException("Creation time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
+            // asked for file's creation date but it is null
+            throw new ExecutionException("Creation time cannot be determined for " + document.getName() +
+                    ". Skipping temporal tagging for this document.");
         } else if (refDate.equals("lastAccessDate") && lastAccessDate != null ) {
+            // reference date is file's last access date
             refDate = lastAccessDate.toString();
         } else if (refDate.equals("lastAccessDate") && lastAccessDate == null ) {
-            throw new ExecutionException("Last access time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
+            // asked for file's last access date but it is null
+            throw new ExecutionException("Last access time cannot be determined for " + document.getName() +
+                    ". Skipping temporal tagging for this document.");
         } else if (refDate.equals("lastModifiedDate") && lastModifiedDate != null ) {
+            // reference date is file's last modification date
             refDate = lastModifiedDate.toString();
         } else if (refDate.equals("lastModifiedDate") && lastModifiedDate == null ) {
-            throw new ExecutionException("Last modified time cannot be determined for " + document.getName() + ". Skipping temporal tagging for this document.");
+            // asked for file's last modification date but it is null
+            throw new ExecutionException("Last modified time cannot be determined for " + document.getName() +
+                    ". Skipping temporal tagging for this document.");
         }
 
         Annotation annotation = new Annotation(docContent);
@@ -129,6 +140,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         pipeline.annotate(annotation);
         List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
 
+        // no temporal expressions detected by SUTime
         if (timexAnnsAll.isEmpty()) {
             fireProcessFinished();
             fireStatusChanged("No temporal expressions detected in " + document.getName() + " in "
