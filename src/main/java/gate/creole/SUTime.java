@@ -84,9 +84,9 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     }
 
     private static final ZoneId defaultZoneId = ZoneId.systemDefault();
-    private LocalDate creationDate = null;
-    private LocalDate lastAccessDate = null;
-    private LocalDate lastModifiedDate = null;
+    private LocalDate creationDate = null; // file's creation date
+    private LocalDate lastAccessDate = null; // file's last access date
+    private LocalDate lastModifiedDate = null; // file's last modified date
 
     @Override
     public void execute() throws ExecutionException {
@@ -96,8 +96,8 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         fireProgressChanged(0);
 
         if (document == null) throw new ExecutionException("No document to process!");
-        String docContent = document.getContent().toString();
-        int docContentLength = docContent.length();
+        String docContent = document.getContent().toString(); // document's content
+        int docContentLength = docContent.length(); // length of document's content
 
         Properties props = new Properties();
         AnnotationPipeline pipeline = new AnnotationPipeline();
