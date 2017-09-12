@@ -173,15 +173,15 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
             Path file = Paths.get(document.getSourceUrl().toURI());
             BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
             if (attr != null && fDate.equals("creationDate")) {
-                LocalDateTime fileDateTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
-                fileDate = fileDateTime.toLocalDate().toString();
+                LocalDateTime creationTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
+                fileDate = creationTime.toLocalDate().toString();
             } else if (attr != null && fDate.equals("lastAccessDate")) {
-                LocalDateTime fileDateTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
-                fileDate = fileDateTime.toLocalDate().toString();
+                LocalDateTime lastAccessTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
+                fileDate = lastAccessTime.toLocalDate().toString();
             }
             else if (attr != null && fDate.equals("lastModifiedDate")) {
-                LocalDateTime fileDateTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
-                fileDate = fileDateTime.toLocalDate().toString();
+                LocalDateTime lastModifiedTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
+                fileDate = lastModifiedTime.toLocalDate().toString();
             }
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
