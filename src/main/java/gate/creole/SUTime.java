@@ -73,8 +73,10 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "Reference date of the document. Permissible date values are 'YYYY-MM-DD', 'today' (today's date), 'creationDate' (date file was created), " +
-            "'lastAccessDate' (date file was last accessed) and 'lastModifiedDate' (date file was last modified).", defaultValue = "today")
+    @CreoleParameter(comment = "Reference date of the document. Permissible date values are 'YYYY-MM-DD', " +
+            "'today' (today's date), 'creationDate' (date file was created), " +
+            "'lastAccessDate' (date file was last accessed) and 'lastModifiedDate' (date file was last modified).",
+            defaultValue = "today")
     public void setReferenceDate(String date) {
         referenceDate = date;
     }
@@ -161,7 +163,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     }
 
     /**
-     * Sets as file date its creation, last access or last modification date.
+     * Sets as file date its creation, or last access or last modification date.
      *
      * @param fDate A string with value "fileCreationDate", or "fileLastAccessDate" or "fileLastModifiedDate".
      */
@@ -170,17 +172,16 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         try {
             Path file = Paths.get(document.getSourceUrl().toURI());
             BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
+            LocalDateTime fileDateTime = null;
             if (attr != null && fDate.equals("creationDate")) {
-                LocalDateTime localDateTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
-                fileDate = localDateTime.toLocalDate().toString();
+                fileDateTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
             } else if (attr != null && fDate.equals("lastAccessDate")) {
-                LocalDateTime localDateTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
-                fileDate = localDateTime.toLocalDate().toString();
+                fileDateTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
             }
             else if (attr != null && fDate.equals("lastModifiedDate")) {
-                LocalDateTime localDateTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
-                fileDate = localDateTime.toLocalDate().toString();
+                fileDateTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
             }
+            fileDate = fileDateTime.toLocalDate().toString();
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
