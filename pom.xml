@@ -35,6 +35,7 @@
                 <version>3.0.2</version>
                 <configuration>
                     <outputDirectory>.</outputDirectory>
+                    <finalName>${project.artifactId}</finalName>
                 </configuration>
             </plugin>
             <plugin>
@@ -47,7 +48,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>${project.artifactId}</finalName>
     </build>
 
     <properties>
