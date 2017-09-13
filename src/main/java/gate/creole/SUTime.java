@@ -43,8 +43,13 @@ import java.text.NumberFormat;
 )
 public class SUTime extends AbstractLanguageAnalyser implements ProcessingResource, Serializable {
 
-    // name of the annotation set to be used as input
-    private String inputASName;
+    private static final ZoneId defaultZoneId = ZoneId.systemDefault(); // system's time zone
+    private static final String dateFormat = "yyyy-MM-dd"; // date format required by SUTime
+    private String inputASName; // name of the annotation set to be used as input
+    private String outputASName; // name of the annotation set to be used for output (i.e. write the TIME3X tags)
+    private String referenceDate; // reference date to be used for normalization
+    private String fileDate = null; // file date to be retrieved from the OS
+    private AnnotationPipeline pipeline = new AnnotationPipeline(); // Stanford CoreNLP annotation pipeline
 
     @RunTime
     @Optional
@@ -53,12 +58,14 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         inputASName = name;
     }
 
+    /**
+     * Provides the name of the input annotation set.
+     *
+     * @return The name of the annotation set used for input.
+     */
     public String getInputASName() {
         return inputASName;
     }
-
-    // name of the annotation set to be used for output (i.e. write the TIME3X tags)
-    private String outputASName;
 
     @RunTime
     @Optional
@@ -67,12 +74,14 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         outputASName = name;
     }
 
+    /**
+     * Provides the name of the output annotation set.
+     *
+     * @return The name of the annotation set used for output.
+     */
     public String getOutputASName() {
         return outputASName;
     }
-
-    // reference date to be used for normalization
-    private String referenceDate;
 
     @RunTime
     @Optional
@@ -84,15 +93,14 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         referenceDate = date;
     }
 
+    /**
+     * Provides the reference date of the current document.
+     *
+     * @return The reference date used normalizing temporal expressions by SUTime.
+     */
     public String getReferenceDate() {
         return referenceDate;
     }
-
-    private static final ZoneId defaultZoneId = ZoneId.systemDefault();
-    private static final String dateFormat = "yyyy-MM-dd";
-    private String fileDate = null;
-
-    private AnnotationPipeline pipeline = new AnnotationPipeline();
 
     @Override
     public Resource init() throws ResourceInstantiationException {
@@ -106,7 +114,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     @Override
     public void execute() throws ExecutionException {
 
-        long execStartTime = System.currentTimeMillis(); // start time
+        long execStartTime = System.currentTimeMillis(); // execution start time
 
         // update GATE
         fireStatusChanged("Performing temporal tagging annotations with SUTime in " + document.getName());
