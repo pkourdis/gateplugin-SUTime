@@ -92,6 +92,17 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     private static final String dateFormat = "yyyy-MM-dd";
     private String fileDate = null;
 
+    private AnnotationPipeline pipeline = new AnnotationPipeline();
+
+    @Override
+    public Resource init() throws ResourceInstantiationException {
+
+        Properties props = new Properties();
+        pipeline.addAnnotator(new TokenizerAnnotator(false));
+        pipeline.addAnnotator(new TimeAnnotator("sutime", props));
+        return this;
+    }
+
     @Override
     public void execute() throws ExecutionException {
 
@@ -129,11 +140,6 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         }
 
         // SUTime part
-        Properties props = new Properties();
-        AnnotationPipeline pipeline = new AnnotationPipeline();
-        pipeline.addAnnotator(new TokenizerAnnotator(false));
-        pipeline.addAnnotator(new TimeAnnotator("sutime", props));
-
         Annotation annotation = new Annotation(docContent);
         annotation.set(CoreAnnotations.DocDateAnnotation.class, refDate);
         pipeline.annotate(annotation);
@@ -142,7 +148,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         // no temporal expressions detected by SUTime
         if (timexAnnsAll.isEmpty()) {
             fireProcessFinished();
-            fireStatusChanged("No temporal expressions detected in " + document.getName() + " in "
+            fireStatusChanged("No temporal expressions detected for " + document.getName() + " in "
                     + NumberFormat.getInstance().format((double)(System.currentTimeMillis() - execStartTime) / 1000)
                     + " seconds!");
             return;
@@ -167,7 +173,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
         // update GATE
         fireProcessFinished();
-        fireStatusChanged("Temporal expressions detected and normalized in " + document.getName() + " in "
+        fireStatusChanged("Temporal expressions detected and normalized for " + document.getName() + " in "
                 + NumberFormat.getInstance().format((double)(System.currentTimeMillis() - execStartTime) / 1000)
                 + " seconds!");
     }
@@ -213,8 +219,6 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
         try { // if it is not a valid date with the right format it will throw a ParseException
             Date date = simpleDateFormat.parse(dateToValidate);
-            System.out.println(date);
-
         } catch (ParseException e) {
             e.printStackTrace();
             return false;
