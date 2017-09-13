@@ -32,7 +32,7 @@ import java.net.URISyntaxException;
 import java.text.NumberFormat;
 
 /**
- * A processing resource for GATE Developer implementing the SUTime library for temporal tagging.
+ * A GATE processing resource for temporal tagging using the SUTIme library part of the Stanford CoreNLP suite.
  *
  * @author Panagiotis Kourdis <kourdis@gmail.com>
  */
