@@ -21,7 +21,7 @@ The following libraries should be placed inside the $GATE_HOME/lib directory:
 
 ### 2.2 Installation
 
-Download the latest version [from here](https://github.com/pkourdis/gateplugin-SUTime/releases), unzip the file and place the folder inside the $GATE_HOME/plugins directory.
+[Download here](https://github.com/pkourdis/gateplugin-SUTime/releases) the latest version, unzip the file and place the folder inside the $GATE_HOME/plugins directory.
 
 ## 3. Usage
 
