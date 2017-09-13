@@ -29,7 +29,7 @@ The following runtime parameters are available:
 
 `inputASName`: No usage (future releases).
 
-`outputASName`: Name of the annotation set to write the TIMEX3 annotations.
+`outputASName`: Name of the annotation set to write the TIMEX3 annotations (default value "SUTime").
  
 `referenceDate`: A date set by the user as reference for normalizing temporal expressions. Permissible values are:
 
