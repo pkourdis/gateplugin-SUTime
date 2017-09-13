@@ -48,7 +48,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "The annotation set to be used for input.", defaultValue = "")
+    @CreoleParameter(comment = "The annotation set to be used for input.", defaultValue = "SUTime")
     public void setInputASName(String name) {
         inputASName = name;
     }
