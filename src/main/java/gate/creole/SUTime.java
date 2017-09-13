@@ -218,7 +218,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         simpleDateFormat.setLenient(false); // makes the parse method below throw exception
 
         try { // if it is not a valid date with the right format it will throw a ParseException
-            Date date = simpleDateFormat.parse(dateToValidate);
+            simpleDateFormat.parse(dateToValidate);
         } catch (ParseException e) {
             e.printStackTrace();
             return false;
