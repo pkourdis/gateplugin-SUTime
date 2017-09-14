@@ -25,7 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.net.URISyntaxException;
@@ -49,7 +48,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     private String outputASName; // name of the annotation set to be used for output (i.e. write the TIME3X tags)
     private String referenceDate; // reference date to be used for normalization
     private String fileDate = null; // file date to be retrieved from the OS
-    private AnnotationPipeline pipeline = new AnnotationPipeline(); // Stanford CoreNLP annotation pipeline
+    private AnnotationPipeline annotationPipeline = new AnnotationPipeline(); // Stanford CoreNLP annotation annotationPipeline
 
     @RunTime
     @Optional
@@ -106,15 +105,15 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     public Resource init() throws ResourceInstantiationException {
 
         Properties props = new Properties();
-        pipeline.addAnnotator(new TokenizerAnnotator(false));
-        pipeline.addAnnotator(new TimeAnnotator("sutime", props));
+        annotationPipeline.addAnnotator(new TokenizerAnnotator(false));
+        annotationPipeline.addAnnotator(new TimeAnnotator("sutime", props));
         return this;
     }
 
     @Override
     public void reInit() throws ResourceInstantiationException {
 
-        pipeline = null;
+        annotationPipeline = null;
         init();
     }
 
@@ -157,7 +156,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         // SUTime part
         Annotation annotation = new Annotation(docContent);
         annotation.set(CoreAnnotations.DocDateAnnotation.class, refDate);
-        pipeline.annotate(annotation);
+        annotationPipeline.annotate(annotation);
         List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
 
         // no temporal expressions detected by SUTime
