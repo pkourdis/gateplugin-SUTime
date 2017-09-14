@@ -48,7 +48,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     private String outputASName; //name of the annotation set to be used for output (i.e. write the TIME3X tags)
     private String referenceDate; //reference date to be used for normalization
     private String fileDate = null; //file date to be retrieved from the operating system
-    private AnnotationPipeline annotationPipeline = new AnnotationPipeline(); //Stanford CoreNLP annotation pipeline
+    private AnnotationPipeline annotationPipeline; //Stanford CoreNLP annotation pipeline
 
     @RunTime
     @Optional
@@ -105,6 +105,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     public Resource init() throws ResourceInstantiationException {
 
         Properties props = new Properties();
+        annotationPipeline = new AnnotationPipeline();
         annotationPipeline.addAnnotator(new TokenizerAnnotator(false));
         annotationPipeline.addAnnotator(new TimeAnnotator("sutime", props));
         return this;
