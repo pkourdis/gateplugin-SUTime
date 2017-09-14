@@ -42,13 +42,13 @@ import java.text.NumberFormat;
 )
 public class SUTime extends AbstractLanguageAnalyser implements ProcessingResource, Serializable {
 
-    private static final ZoneId defaultZoneId = ZoneId.systemDefault(); // system's time zone
-    private static final String dateFormat = "yyyy-MM-dd"; // date format required by SUTime
-    private String inputASName; // name of the annotation set to be used as input
-    private String outputASName; // name of the annotation set to be used for output (i.e. write the TIME3X tags)
-    private String referenceDate; // reference date to be used for normalization
-    private String fileDate = null; // file date to be retrieved from the OS
-    private AnnotationPipeline annotationPipeline = new AnnotationPipeline(); // Stanford CoreNLP annotation pipeline
+    private static final ZoneId defaultZoneId = ZoneId.systemDefault(); //system's time zone
+    private static final String dateFormat = "yyyy-MM-dd"; //date format required by SUTime
+    private String inputASName; //name of the annotation set to be used as input
+    private String outputASName; //name of the annotation set to be used for output (i.e. write the TIME3X tags)
+    private String referenceDate; //reference date to be used for normalization
+    private String fileDate = null; //file date to be retrieved from the operating system
+    private AnnotationPipeline annotationPipeline = new AnnotationPipeline(); //Stanford CoreNLP annotation pipeline
 
     @RunTime
     @Optional
@@ -120,46 +120,47 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     @Override
     public void execute() throws ExecutionException {
 
-        long execStartTime = System.currentTimeMillis(); // execution start time
+        long execStartTime = System.currentTimeMillis(); //execution start time
 
-        // update GATE
+        //update GATE
         fireStatusChanged("Performing temporal tagging annotations with SUTime in " + document.getName());
         fireProgressChanged(0);
 
-        // document information
+        //document information
         if (document == null) throw new ExecutionException("No document to process!");
-        String docContent = document.getContent().toString(); // document's content
-        int docContentLength = docContent.length(); // length of document's content
+        String docContent = document.getContent().toString(); //document's content
+        int docContentLength = docContent.length(); //length of document's content
 
-        // set reference date
+        //set reference date
         String refDate = referenceDate;
         switch (refDate) {
-            case "": // no reference date provided by the user
+            case "": //no reference date provided by the user
                 throw new ExecutionException("No reference date provided. Please give a valid option.");
-            case "today": // user asked for today's date as reference date
+            case "today": //user asked for today's date as reference date
                 refDate = LocalDate.now().toString();
                 break;
-            case "creationDate": // user asked for file's creation date as reference date
-            case "lastAccessDate": // user asked for file's last access date as reference date
-            case "lastModifiedDate": // user asked for file's lat modification date as reference date
+            case "creationDate": //user asked for file's creation date as reference date
+            case "lastAccessDate": //user asked for file's last access date as reference date
+            case "lastModifiedDate": //user asked for file's lat modification date as reference date
                 setFileDate(refDate);
                 if (fileDate != null) { refDate = fileDate; }
-                else { // user asked for file's date as reference date but it is null
+                else { //user asked for file's date as reference date but it is null
                     throw new ExecutionException(refDate + " is null for " + document.getName());
                 }
                 break;
             default:
-                if (!isDateValid(refDate)) throw new ExecutionException(refDate + " is not a valid date or formatted as 'yyyy-MM-dd'.");
+                if (!isDateValid(refDate)) //check if it is a valid date and in the right format
+                    throw new ExecutionException(refDate + " is not a valid date or formatted as 'yyyy-MM-dd'.");
                 break;
         }
 
-        // SUTime part
+        //Stanford CoreNLP - SUTime
         Annotation annotation = new Annotation(docContent);
         annotation.set(CoreAnnotations.DocDateAnnotation.class, refDate);
         annotationPipeline.annotate(annotation);
         List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
 
-        // no temporal expressions detected by SUTime
+        //no temporal expressions detected
         if (timexAnnsAll.isEmpty()) {
             fireProcessFinished();
             fireStatusChanged("No temporal expressions detected for " + document.getName() + " in "
@@ -168,7 +169,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
             return;
         }
 
-        // write TIMEX3 annotations
+        //write TIMEX3 annotations
         AnnotationSet outputAS = document.getAnnotations(outputASName);
         for (CoreMap cm : timexAnnsAll) {
             List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
@@ -185,7 +186,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
             }
         }
 
-        // update GATE
+        //update GATE
         fireProcessFinished();
         fireStatusChanged("Temporal expressions detected and normalized for " + document.getName() + " in "
                 + NumberFormat.getInstance().format((double)(System.currentTimeMillis() - execStartTime) / 1000)
@@ -229,9 +230,9 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
         if (dateToValidate == null) return false;
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-        simpleDateFormat.setLenient(false); // makes the parse method below throw exception
+        simpleDateFormat.setLenient(false); //makes the parse method below throw exception
 
-        try { // if it is not a valid date with the right format it will throw a ParseException
+        try { //if it is not a valid date with the right format it will throw a ParseException
             simpleDateFormat.parse(dateToValidate);
         } catch (ParseException e) {
             e.printStackTrace();
