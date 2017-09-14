@@ -112,6 +112,13 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
     }
 
     @Override
+    public void reInit() throws ResourceInstantiationException {
+
+        pipeline = null;
+        init();
+    }
+
+    @Override
     public void execute() throws ExecutionException {
 
         long execStartTime = System.currentTimeMillis(); // execution start time
