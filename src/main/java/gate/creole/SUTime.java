@@ -38,7 +38,8 @@ import java.text.NumberFormat;
 @CreoleResource(
         name = "SUTime Stanford Temporal Tagger",
         icon = "SUTime.png",
-        comment = "Annotate documents with TIMEX3 tags using the SUTime library."
+        comment = "Annotate documents with TIMEX3 tags using the SUTime library.",
+        helpURL = "https://pkourdis.github.io/gateplugin-SUTime/"
 )
 public class SUTime extends AbstractLanguageAnalyser implements ProcessingResource, Serializable {
 
