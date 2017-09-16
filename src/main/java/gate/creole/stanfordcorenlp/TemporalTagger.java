@@ -1,6 +1,9 @@
-package gate.creole;
+package gate.creole.stanfordcorenlp;
 
 import gate.*;
+import gate.creole.AbstractLanguageAnalyser;
+import gate.creole.ExecutionException;
+import gate.creole.ResourceInstantiationException;
 import gate.creole.metadata.CreoleResource;
 import gate.creole.metadata.CreoleParameter;
 import gate.creole.metadata.Optional;
@@ -36,12 +39,12 @@ import java.text.NumberFormat;
  * @author Panagiotis Kourdis <kourdis@gmail.com>
  */
 @CreoleResource(
-        name = "SUTime Stanford Temporal Tagger",
+        name = "Stanford Temporal Tagger SUTime",
         icon = "SUTime.png",
-        comment = "Annotate documents with TIMEX3 tags using the SUTime library.",
-        helpURL = "https://pkourdis.github.io/gateplugin-SUTime/"
+        comment = "Annotate documents with TIMEX3 tags using the SUTime library developed by the Stanford CoreNLP group.",
+        helpURL = "https://pkourdis.github.io/gateplugin-TemporalTagger/"
 )
-public class SUTime extends AbstractLanguageAnalyser implements ProcessingResource, Serializable {
+public class TemporalTagger extends AbstractLanguageAnalyser implements ProcessingResource, Serializable {
 
     private static final ZoneId defaultZoneId = ZoneId.systemDefault(); //system's time zone
     private static final String dateFormat = "yyyy-MM-dd"; //date format required by SUTime
@@ -156,7 +159,7 @@ public class SUTime extends AbstractLanguageAnalyser implements ProcessingResour
                 break;
         }
 
-        //Stanford CoreNLP - SUTime
+        //Stanford CoreNLP - SUTime=
         Annotation annotation = new Annotation(docContent);
         annotation.set(CoreAnnotations.DocDateAnnotation.class, refDate);
         annotationPipeline.annotate(annotation);

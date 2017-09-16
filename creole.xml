@@ -1,4 +1,4 @@
-<!-- creole.xml for SUTime -->
+<!-- creole.xml for SUTime Stanford Temporal Tagger -->
 <CREOLE-DIRECTORY>
     <JAR SCAN="true">gateplugin-sutime.jar</JAR>
 </CREOLE-DIRECTORY>
