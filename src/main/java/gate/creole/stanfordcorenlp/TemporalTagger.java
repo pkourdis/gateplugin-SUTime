@@ -159,7 +159,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
                 break;
         }
 
-        //Stanford CoreNLP - SUTime=
+        //Stanford CoreNLP - SUTime
         Annotation annotation = new Annotation(docContent);
         annotation.set(CoreAnnotations.DocDateAnnotation.class, refDate);
         annotationPipeline.annotate(annotation);
