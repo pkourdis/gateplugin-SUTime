@@ -282,10 +282,10 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
     }
 
     /**
-     * Check if date is a valid with the right format.
+     * Check if date is valid with the right format.
      *
      * @param dateToValidate The date as string to be validated.
-     * @return True if date is not valid and in right format else false.
+     * @return True if date is valid and in right format else false.
      */
     private boolean isDateValid(String dateToValidate){
 
