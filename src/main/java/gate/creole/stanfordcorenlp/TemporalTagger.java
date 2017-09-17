@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Properties;
 import java.net.URISyntaxException;
@@ -48,33 +49,60 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
 
     private static final ZoneId defaultZoneId = ZoneId.systemDefault(); //system's time zone
     private static final String dateFormat = "yyyy-MM-dd"; //date format required by SUTime
-    private String inputASName; //name of the annotation set to be used as input
-    private String outputASName; //name of the annotation set to be used for output (i.e. write the TIME3X tags)
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat);
+    private String inputAnnotationSetName; //name of the annotation set to be used for input
+    private String inputAnnotationName; // name of the annotation to be used for input
+    private String inputFeatureName; // name of the feature to be used for input (i.e. holds the reference date)
+    private String outputAnnotationSetName; //name of the annotation set to be used for output (i.e. write the TIME3X tags)
     private String referenceDate; //reference date to be used for normalization
     private String fileDate; //file date to be retrieved from the operating system
     private AnnotationPipeline annotationPipeline; //Stanford CoreNLP annotation pipeline
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "The annotation set to be used for input.", defaultValue = "")
-    public void setInputASName(String name) {
-        inputASName = name;
+    @CreoleParameter(comment = "The name of the annotation set that has the annotation with the date to be used as reference", defaultValue = "")
+    public void setInputAnnotationSetName(String name) {
+        inputAnnotationSetName = name;
     }
 
     /**
-     * Provides the name of the input annotation set.
+     * Provides the name of the input annotation set to look for the reference date.
      *
      * @return The name of the annotation set used for input.
      */
-    public String getInputASName() {
-        return inputASName;
+    public String getInputAnnotationSetName() {
+        return inputAnnotationSetName;
     }
 
     @RunTime
     @Optional
+    @CreoleParameter(comment = "The name of the annotation that has the date to be used as reference.", defaultValue = "")
+    public void setInputAnnotationName(String name) { inputAnnotationName = name;}
+
+    /**
+     * Provides the name of the input annotation to look for the reference dats.
+     *
+     * @return The name of the annotation used for input.
+     */
+    public String getInputAnnotationName() {return inputAnnotationName; }
+
+    @RunTime
+    @Optional
+    @CreoleParameter(comment = "The name of the feature with value the date to be used as reference.", defaultValue = "")
+    public void setInputFeatureName(String name) { inputFeatureName = name;}
+
+    /**
+     * Provides the name of the feature holding the date to be used as reference date.
+     *
+     * @return The name of the feature with the document date.
+     */
+    public String getInputFeatureName() {return inputFeatureName; }
+
+    @RunTime
+    @Optional
     @CreoleParameter(comment = "The annotation set to be used for output.", defaultValue = "SUTime")
-    public void setOutputASName(String name) {
-        outputASName = name;
+    public void setOutputAnnotationSetName(String name) {
+        outputAnnotationSetName = name;
     }
 
     /**
@@ -82,13 +110,14 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
      *
      * @return The name of the annotation set used for output.
      */
-    public String getOutputASName() {
-        return outputASName;
+    public String getOutputAnnotationSetName() {
+        return outputAnnotationSetName;
     }
 
     @RunTime
     @Optional
     @CreoleParameter(comment = "Reference date of the document. Permissible date values are 'yyyy-MM-dd', " +
+            "annotation (feature of annotation holding the date)" +
             "'today' (today's date), 'creationDate' (date file was created), " +
             "'lastAccessDate' (date file was last accessed) and 'lastModifiedDate' (date file was last modified).",
             defaultValue = "today")
@@ -126,9 +155,10 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
     public void execute() throws ExecutionException {
 
         long execStartTime = System.currentTimeMillis(); //execution start time
+        String refDate = referenceDate; //set reference date (might change later if found in annotation)
 
         //update GATE
-        fireStatusChanged("Performing temporal tagging annotations with SUTime in " + document.getName());
+        fireStatusChanged("Performing temporal expressions tagging with SUTime in " + document.getName());
         fireProgressChanged(0);
 
         //document information
@@ -136,26 +166,40 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
         String docContent = document.getContent().toString(); //document's content
         int docContentLength = docContent.length(); //length of document's content
 
-        //set reference date
-        String refDate = referenceDate;
+        // reference date
         switch (refDate) {
-            case "": //no reference date provided by the user
+            case "": //no explicit reference date provided by the user
                 throw new ExecutionException("No reference date provided. Please give a valid option.");
             case "today": //user asked for today's date as reference date
-                refDate = LocalDate.now().toString();
+                refDate = LocalDate.now().format(dateTimeFormatter);
                 break;
             case "creationDate": //user asked for file's creation date as reference date
             case "lastAccessDate": //user asked for file's last access date as reference date
             case "lastModifiedDate": //user asked for file's lat modification date as reference date
                 setFileDate(refDate);
-                if (fileDate != null) { refDate = fileDate; }
-                else { //user asked for file's date as reference date but it is null
+                if (fileDate != null) {
+                    refDate = fileDate;
+                } else { //user asked for file's date as reference date but it is null
                     throw new ExecutionException(refDate + " is null for " + document.getName());
                 }
                 break;
+            case "annotation":
+                boolean foundValidDocumentDate = false;
+                AnnotationSet inputAS = document.getAnnotations(inputAnnotationSetName);
+                AnnotationSet inputAN = inputAS.get(inputAnnotationName);
+                for (gate.Annotation annotation : inputAN) {
+                    FeatureMap features = annotation.getFeatures();
+                    refDate = (String) features.get(inputFeatureName);
+                    if (isDateValid(refDate)) { //valid date found in the specified annotation
+                        foundValidDocumentDate = true;
+                        break;
+                    }
+                }
+                if (!foundValidDocumentDate) //if it is not found throw execution exception
+                    throw new ExecutionException("No valid date found in the specified annotation for ." + document.getName());
             default:
-                if (!isDateValid(refDate)) //check if it is a valid date and in the right format
-                    throw new ExecutionException(refDate + " is not a valid date or formatted as 'yyyy-MM-dd'.");
+                if (!isDateValid(refDate)) //check if it is not a valid date and in the right format
+                    throw new ExecutionException(refDate + " is not a valid date and/or formatted as 'yyyy-MM-dd'.");
                 break;
         }
 
@@ -175,7 +219,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
         }
 
         //write TIMEX3 annotations
-        AnnotationSet outputAS = document.getAnnotations(outputASName);
+        AnnotationSet outputAS = document.getAnnotations(outputAnnotationSetName);
         for (CoreMap cm : timexAnnsAll) {
             List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
             long startOffset = tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class);
@@ -210,14 +254,14 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
             BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
             if (attr != null && fDate.equals("creationDate")) {
                 LocalDateTime creationTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
-                fileDate = creationTime.toLocalDate().toString();
+                fileDate = creationTime.toLocalDate().format(dateTimeFormatter);
             } else if (attr != null && fDate.equals("lastAccessDate")) {
                 LocalDateTime lastAccessTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
-                fileDate = lastAccessTime.toLocalDate().toString();
+                fileDate = lastAccessTime.toLocalDate().format(dateTimeFormatter);
             }
             else if (attr != null && fDate.equals("lastModifiedDate")) {
                 LocalDateTime lastModifiedTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
-                fileDate = lastModifiedTime.toLocalDate().toString();
+                fileDate = lastModifiedTime.toLocalDate().format(dateTimeFormatter);
             }
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
@@ -228,7 +272,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
      * Check if date is a valid with the right format.
      *
      * @param dateToValidate The date as string to be validated.
-     * @return True if date is valid and in right format else false.
+     * @return True if date is not valid and in right format else false.
      */
     private boolean isDateValid(String dateToValidate){
 
@@ -240,7 +284,6 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
         try { //if it is not a valid date with the right format it will throw a ParseException
             simpleDateFormat.parse(dateToValidate);
         } catch (ParseException e) {
-            e.printStackTrace();
             return false;
         }
         return true;

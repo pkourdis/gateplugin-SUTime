@@ -27,7 +27,11 @@ The following libraries should be placed inside the $GATE_HOME/lib directory:
 
 The following runtime parameters are available:
 
-`inputASName`: No usage (future releases).
+`inputAnnotationSetName`: The name of the annotation set that has the annotation with the date to be used as reference (if `referenceDate`=annotation).
+
+`inputAnnotationName`: The name of the annotation that has the date to be used as reference (if `referenceDate`=annotation).
+
+`inputFeatureName`: The name of the feature with value the date to be used as reference (if `referenceDate`=annotation).
 
 `outputASName`: Name of the annotation set to write the TIMEX3 annotations (default value "SUTime").
  
@@ -36,6 +40,7 @@ The following runtime parameters are available:
 | Value  | Description |
 | -----  | ----------- |
 |  2017-08-25  | Date provided in "yyy-MM-dd" format. |
+| annotation | The user has to provide the `inputAnnotationSetName`, `inputAnnotationName` and `inputFeatureName`. Date stored in `inputFeatureName` should be in "yyy-MM-dd" format.
 | today  | Today's date (default value). |
 | creationDate | Date file was created as recorded by the operating system. |
 | lastAccessDate | Date file was last accessed as recorded by the operating system. |
@@ -46,12 +51,17 @@ User should verify that file dates are supported by the operating system.
 
 ## 4. Example
 
+Screenshot of runtime parameters selection:
+
+![Screenshot](https://user-images.githubusercontent.com/11142121/30517970-dcba19ba-9b24-11e7-8890-c80b5bd676e4.png)
+
 Screenshot from GATE Developer:
 
 ![Screenshot](https://user-images.githubusercontent.com/11142121/30256611-ef21e2e0-9660-11e7-9d02-8de678894b1a.png)
 
 ## 5. Release History
 
+* **Version 0.3 - September 16, 2017**: Reference date can also be retrieved from a document annotation. 
 * **Version 0.3 - September 12, 2017**: Improve reference date handling. 
 * **Version 0.2 - September 10, 2017**: Minor corrections to initial version.
 * **Version 0.1 - September 10, 2017**: Initial working version.
