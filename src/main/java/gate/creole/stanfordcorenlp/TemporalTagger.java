@@ -165,6 +165,11 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
         writeReferenceDate = choice;
     }
 
+    /**
+     * Provides the user's choice (true/false) to write the reference date in the output annotation.
+     *
+     * @return The user's choice to write or not the reference date in the output annotation.
+     */
     public Boolean getWriteReferenceDate() { return writeReferenceDate; }
 
     @Override
