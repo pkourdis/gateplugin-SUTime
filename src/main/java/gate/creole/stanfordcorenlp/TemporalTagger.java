@@ -51,16 +51,17 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
     private static final String dateFormat = "yyyy-MM-dd"; //date format required by SUTime
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat);
     private String inputAnnotationSetName; //name of the annotation set to be used for input
-    private String inputAnnotationName; // name of the annotation to be used for input
-    private String inputFeatureName; // name of the feature to be used for input (i.e. holds the reference date)
-    private String outputAnnotationSetName; //name of the annotation set to be used for output (i.e. write the TIME3X tags)
+    private String inputAnnotationName; //name of the annotation to be used for input
+    private String inputFeatureName; //name of the feature to be used for input
+    private String outputAnnotationSetName; //name of the annotation set to write the results
+    private String outputAnnotationName; //name of the annotation set to write the results
     private String referenceDate; //reference date to be used for normalization
     private String fileDate; //file date to be retrieved from the operating system
     private AnnotationPipeline annotationPipeline; //Stanford CoreNLP annotation pipeline
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "The name of the annotation set that has the annotation with the date to be used as reference", defaultValue = "")
+    @CreoleParameter(comment = "Name of the annotation set that has the annotation with the date to be used as reference (if `referenceDate`=annotation)", defaultValue = "")
     public void setInputAnnotationSetName(String name) {
         inputAnnotationSetName = name;
     }
@@ -76,7 +77,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "The name of the annotation that has the date to be used as reference.", defaultValue = "")
+    @CreoleParameter(comment = "Name of the annotation that has the date to be used as reference (if `referenceDate`=annotation).", defaultValue = "")
     public void setInputAnnotationName(String name) { inputAnnotationName = name;}
 
     /**
@@ -88,11 +89,11 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "The name of the feature with value the date to be used as reference.", defaultValue = "")
+    @CreoleParameter(comment = "Name of the feature with value the date to be used as reference (if `referenceDate`=annotation). Date should be in \"yyy-MM-dd\" format.", defaultValue = "")
     public void setInputFeatureName(String name) { inputFeatureName = name;}
 
     /**
-     * Provides the name of the feature holding the date to be used as reference date.
+     * Provides the name of the feature holding the date to be used as reference date. Date should be in "yyy-MM-dd" format.
      *
      * @return The name of the feature with the document date.
      */
@@ -100,7 +101,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
 
     @RunTime
     @Optional
-    @CreoleParameter(comment = "The annotation set to be used for output.", defaultValue = "SUTime")
+    @CreoleParameter(comment = "Name of the annotation set to write the results.", defaultValue = "SUTime")
     public void setOutputAnnotationSetName(String name) {
         outputAnnotationSetName = name;
     }
@@ -116,8 +117,20 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
 
     @RunTime
     @Optional
+    @CreoleParameter(comment = "Name of the annotation to write the results.", defaultValue = "TIMEX3")
+    public void setOutputAnnotationName(String name) { outputAnnotationName = name;}
+
+    /**
+     * Provides the name of the output annotation to write the results.
+     *
+     * @return The name of the annotation used for output.
+     */
+    public String getOutputAnnotationName() {return outputAnnotationName; }
+
+    @RunTime
+    @Optional
     @CreoleParameter(comment = "Reference date of the document. Permissible date values are 'yyyy-MM-dd', " +
-            "annotation (feature of annotation holding the date)" +
+            "annotation (document annotation holding the date)" +
             "'today' (today's date), 'creationDate' (date file was created), " +
             "'lastAccessDate' (date file was last accessed) and 'lastModifiedDate' (date file was last modified).",
             defaultValue = "today")

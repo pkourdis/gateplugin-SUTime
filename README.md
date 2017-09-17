@@ -27,15 +27,17 @@ The following libraries should be placed inside the $GATE_HOME/lib directory:
 
 The following runtime parameters are available:
 
-`inputAnnotationSetName`: The name of the annotation set that has the annotation with the date to be used as reference (if `referenceDate`=annotation).
+`inputAnnotationSetName`: Name of the annotation set that has the annotation with the date to be used as reference (if `referenceDate`=annotation).
 
-`inputAnnotationName`: The name of the annotation that has the date to be used as reference (if `referenceDate`=annotation).
+`inputAnnotationName`: Name of the annotation that has the date to be used as reference (if `referenceDate`=annotation).
 
-`inputFeatureName`: The name of the feature with value the date to be used as reference (if `referenceDate`=annotation).
+`inputFeatureName`: Name of the feature with value the date to be used as reference (if `referenceDate`=annotation). Date should be in "yyy-MM-dd" format.
 
-`outputASName`: Name of the annotation set to write the TIMEX3 annotations (default value "SUTime").
- 
-`referenceDate`: A date set by the user as reference for normalizing temporal expressions. Permissible values are:
+`outputASName`: Name of the annotation set to write the results. Default value is SUTime.
+
+`outputAnnotationName`: Name of the annotation to write the results. Default value is TIMEX3.
+
+`referenceDate`: Date set by the user as reference for normalizing temporal expressions. Permissible values are:
 
 | Value  | Description |
 | -----  | ----------- |
@@ -51,17 +53,19 @@ User should verify that file dates are supported by the operating system.
 
 ## 4. Example
 
-Screenshot of runtime parameters selection:
+Sample screenshots from GATE Developer:
 
-![Screenshot](https://user-images.githubusercontent.com/11142121/30517970-dcba19ba-9b24-11e7-8890-c80b5bd676e4.png)
+##### Runtime parameters window
 
-Screenshot from GATE Developer:
+![Screenshot](https://user-images.githubusercontent.com/11142121/30518264-99484798-9b2d-11e7-8371-9ccde708a932.png)
+
+##### Document annotated with TIME3X tags
 
 ![Screenshot](https://user-images.githubusercontent.com/11142121/30256611-ef21e2e0-9660-11e7-9d02-8de678894b1a.png)
 
 ## 5. Release History
 
-* **Version 0.3 - September 16, 2017**: Reference date can also be retrieved from a document annotation. 
+* **Version 0.4 - September 16, 2017**: Reference date can also be retrieved from a document annotation. 
 * **Version 0.3 - September 12, 2017**: Improve reference date handling. 
 * **Version 0.2 - September 10, 2017**: Minor corrections to initial version.
 * **Version 0.1 - September 10, 2017**: Initial working version.
