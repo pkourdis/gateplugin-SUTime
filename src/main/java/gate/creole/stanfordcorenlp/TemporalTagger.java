@@ -55,8 +55,9 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
     private String inputFeatureName; //name of the feature to be used for input
     private String outputAnnotationSetName; //name of the annotation set to write the results
     private String outputAnnotationName; //name of the annotation set to write the results
-    private String referenceDate; //reference date to be used for normalization
-    private String fileDate; //file date to be retrieved from the operating system
+    private String referenceDate; //reference date provided by the user to be used for normalization
+    private String explicitReferenceDate; //reference date in "yyyy-MM-dd" format
+    private Boolean writeReferenceDate; // Write or not reference date in output annotation
     private AnnotationPipeline annotationPipeline; //Stanford CoreNLP annotation pipeline
 
     @RunTime
@@ -81,7 +82,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
     public void setInputAnnotationName(String name) { inputAnnotationName = name;}
 
     /**
-     * Provides the name of the input annotation to look for the reference dats.
+     * Provides the name of the input annotation to look for the reference date.
      *
      * @return The name of the annotation used for input.
      */
@@ -97,7 +98,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
      *
      * @return The name of the feature with the document date.
      */
-    public String getInputFeatureName() {return inputFeatureName; }
+    public String getInputFeatureName() { return inputFeatureName; }
 
     @RunTime
     @Optional
@@ -139,17 +140,40 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
     }
 
     /**
-     * Provides the reference date of the current document.
+     * Provides the choice of the user as reference date.
      *
-     * @return The reference date used normalizing temporal expressions by SUTime.
+     * @return The reference date provided by the user.
      */
-    public String getReferenceDate() {
-        return referenceDate;
+    public String getReferenceDate() { return referenceDate; }
+
+    /**
+     * Provides the reference date in 'yyyy-MM-dd' format. To be called if necessary only after execution of
+     * temporal tagging since its value might be determined during execution depending on the user's choice.
+     *
+     *
+     * @return The reference date in 'yyyy-MM-dd' format.
+     */
+    public String getExplicitReferenceDate() {return explicitReferenceDate; }
+
+    @RunTime
+    @Optional
+    @CreoleParameter(comment = "True to write the reference date or false not to write.", defaultValue = "false")
+    public void setWriteReferenceDate( Boolean choice) {
+
+        writeReferenceDate = choice;
     }
+
+    /**
+     * Provides the user's choice (true/false) to write the reference date in the output annotation.
+     *
+     * @return The user's choice to write or not the reference date in the output annotation.
+     */
+    public Boolean getWriteReferenceDate() { return writeReferenceDate; }
 
     @Override
     public Resource init() throws ResourceInstantiationException {
 
+        //Stanford CoreNLP - SUTime
         Properties props = new Properties();
         annotationPipeline = new AnnotationPipeline();
         annotationPipeline.addAnnotator(new TokenizerAnnotator(false));
@@ -168,7 +192,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
     public void execute() throws ExecutionException {
 
         long execStartTime = System.currentTimeMillis(); //execution start time
-        String refDate = referenceDate; //set reference date (might change later if found in annotation)
+        explicitReferenceDate = referenceDate; //set reference date
 
         //update GATE
         fireStatusChanged("Performing temporal expressions tagging with SUTime in " + document.getName());
@@ -179,22 +203,17 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
         String docContent = document.getContent().toString(); //document's content
         int docContentLength = docContent.length(); //length of document's content
 
-        // reference date
-        switch (refDate) {
+        //reference date
+        switch (explicitReferenceDate) {
             case "": //no explicit reference date provided by the user
                 throw new ExecutionException("No reference date provided. Please give a valid option.");
             case "today": //user asked for today's date as reference date
-                refDate = LocalDate.now().format(dateTimeFormatter);
+                explicitReferenceDate = LocalDate.now().format(dateTimeFormatter);
                 break;
             case "creationDate": //user asked for file's creation date as reference date
             case "lastAccessDate": //user asked for file's last access date as reference date
             case "lastModifiedDate": //user asked for file's lat modification date as reference date
-                setFileDate(refDate);
-                if (fileDate != null) {
-                    refDate = fileDate;
-                } else { //user asked for file's date as reference date but it is null
-                    throw new ExecutionException(refDate + " is null for " + document.getName());
-                }
+                explicitReferenceDate = getFileDate(explicitReferenceDate).format(dateTimeFormatter);
                 break;
             case "annotation":
                 boolean foundValidDocumentDate = false;
@@ -202,8 +221,8 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
                 AnnotationSet inputAN = inputAS.get(inputAnnotationName);
                 for (gate.Annotation annotation : inputAN) {
                     FeatureMap features = annotation.getFeatures();
-                    refDate = (String) features.get(inputFeatureName);
-                    if (isDateValid(refDate)) { //valid date found in the specified annotation
+                    explicitReferenceDate = (String) features.get(inputFeatureName);
+                    if (isDateValid(explicitReferenceDate)) { //valid date found in the specified annotation
                         foundValidDocumentDate = true;
                         break;
                     }
@@ -211,14 +230,27 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
                 if (!foundValidDocumentDate) //if it is not found throw execution exception
                     throw new ExecutionException("No valid date found in the specified annotation for ." + document.getName());
             default:
-                if (!isDateValid(refDate)) //check if it is not a valid date and in the right format
-                    throw new ExecutionException(refDate + " is not a valid date and/or formatted as 'yyyy-MM-dd'.");
+                if (!isDateValid(explicitReferenceDate)) //check if it is not a valid date and in the right format
+                    throw new ExecutionException(explicitReferenceDate + " is not a valid date and/or formatted as 'yyyy-MM-dd'.");
                 break;
+        }
+
+        AnnotationSet outputAS = document.getAnnotations(outputAnnotationSetName);
+        if (writeReferenceDate) {
+            FeatureMap refDateFeatures = Factory.newFeatureMap();
+            refDateFeatures.put("ReferenceDate", explicitReferenceDate);
+            long docStartOffset = 0;
+            long docEndOffset = (long) docContentLength;
+            try {
+                outputAS.add(docStartOffset, docEndOffset, "DOCINFO", refDateFeatures);
+            } catch (InvalidOffsetException e) {
+                e.printStackTrace();
+            }
         }
 
         //Stanford CoreNLP - SUTime
         Annotation annotation = new Annotation(docContent);
-        annotation.set(CoreAnnotations.DocDateAnnotation.class, refDate);
+        annotation.set(CoreAnnotations.DocDateAnnotation.class, explicitReferenceDate);
         annotationPipeline.annotate(annotation);
         List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
 
@@ -232,7 +264,6 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
         }
 
         //write TIMEX3 annotations
-        AnnotationSet outputAS = document.getAnnotations(outputAnnotationSetName);
         for (CoreMap cm : timexAnnsAll) {
             List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
             long startOffset = tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class);
@@ -260,25 +291,28 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
      *
      * @param fDate A string with value "creationDate", or "lastAccessDate" or "lastModifiedDate".
      */
-    private void setFileDate(String fDate) {
+    private LocalDate getFileDate(String fDate) throws ExecutionException {
 
+        LocalDate fileDate = null;
         try {
             Path file = Paths.get(document.getSourceUrl().toURI());
             BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
             if (attr != null && fDate.equals("creationDate")) {
                 LocalDateTime creationTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
-                fileDate = creationTime.toLocalDate().format(dateTimeFormatter);
+                fileDate = creationTime.toLocalDate();
             } else if (attr != null && fDate.equals("lastAccessDate")) {
                 LocalDateTime lastAccessTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
-                fileDate = lastAccessTime.toLocalDate().format(dateTimeFormatter);
+                fileDate = lastAccessTime.toLocalDate();
             }
             else if (attr != null && fDate.equals("lastModifiedDate")) {
                 LocalDateTime lastModifiedTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
-                fileDate = lastModifiedTime.toLocalDate().format(dateTimeFormatter);
+                fileDate = lastModifiedTime.toLocalDate();
             }
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
+        if (fileDate == null) throw new ExecutionException(referenceDate + " is null for " + document.getName());
+        return fileDate;
     }
 
     /**
