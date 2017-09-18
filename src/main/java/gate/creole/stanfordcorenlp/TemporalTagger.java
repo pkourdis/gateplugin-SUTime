@@ -144,9 +144,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
      *
      * @return The reference date provided by the user.
      */
-    public String getReferenceDate() {
-        return referenceDate;
-    }
+    public String getReferenceDate() { return referenceDate; }
 
     /**
      * Provides the reference date in 'yyyy-MM-dd' format. To be called if necessary only after execution of

@@ -33,7 +33,7 @@ The following runtime parameters are available:
 
 `inputFeatureName`: Name of the feature with value the date to be used as reference (if `referenceDate`=annotation). Date should be in "yyy-MM-dd" format.
 
-`outputASName`: Name of the annotation set to write the results. Default value is SUTime.
+`outputAnnotationSetName`: Name of the annotation set to write the results. Default value is SUTime.
 
 `outputAnnotationName`: Name of the annotation to write the results. Default value is TIMEX3.
 
@@ -48,18 +48,19 @@ The following runtime parameters are available:
 | lastAccessDate | Date file was last accessed as recorded by the operating system. |
 | lastModifiedDate |Date file was last modified as recorded by the operating system. |
 
-
 User should verify that file dates are supported by the operating system.
+
+`writeReferenceDate`: Write or not (true/false) the reference date in the output annotation set. If set to true, it is written under annotation name DOCINFO with feature name ReferenceDate. Default value is false. 
 
 ## 4. Example
 
-Sample screenshots from GATE Developer:
+Screenshots from GATE Developer:
 
-##### Runtime parameters window
+##### Runtime parameters selection window
 
 ![Screenshot](https://user-images.githubusercontent.com/11142121/30518264-99484798-9b2d-11e7-8371-9ccde708a932.png)
 
-##### Document annotated with TIME3X tags
+##### Sample document annotated with TIME3X tags
 
 ![Screenshot](https://user-images.githubusercontent.com/11142121/30256611-ef21e2e0-9660-11e7-9d02-8de678894b1a.png)
 
