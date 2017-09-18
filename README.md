@@ -58,7 +58,7 @@ Screenshots from GATE Developer:
 
 ##### Runtime parameters selection window
 
-![Screenshot](https://user-images.githubusercontent.com/11142121/30518264-99484798-9b2d-11e7-8371-9ccde708a932.png)
+![Screenshot](https://user-images.githubusercontent.com/11142121/30526191-720fd828-9bcb-11e7-9fd6-5702c0856351.png)
 
 ##### Sample document annotated with TIME3X tags
 
