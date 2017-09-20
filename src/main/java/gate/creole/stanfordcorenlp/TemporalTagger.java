@@ -57,7 +57,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
     private String outputAnnotationName; //name of the annotation set to write the results
     private String referenceDate; //reference date provided by the user to be used for normalization
     private String explicitReferenceDate; //reference date in "yyyy-MM-dd" format
-    private Boolean writeReferenceDate; // Write or not reference date in output annotation
+    private Boolean writeReferenceDate; //write or not reference date in output annotation
     private AnnotationPipeline annotationPipeline; //Stanford CoreNLP annotation pipeline
 
     @RunTime
@@ -119,7 +119,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
     @RunTime
     @Optional
     @CreoleParameter(comment = "Name of the annotation to write the results.", defaultValue = "TIMEX3")
-    public void setOutputAnnotationName(String name) { outputAnnotationName = name;}
+    public void setOutputAnnotationName(String name) { outputAnnotationName = name; }
 
     /**
      * Provides the name of the output annotation to write the results.
@@ -158,10 +158,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
     @RunTime
     @Optional
     @CreoleParameter(comment = "True to write the reference date or false not to write.", defaultValue = "false")
-    public void setWriteReferenceDate( Boolean choice) {
-
-        writeReferenceDate = choice;
-    }
+    public void setWriteReferenceDate( Boolean choice) { writeReferenceDate = choice; }
 
     /**
      * Provides the user's choice (true/false) to write the reference date in the output annotation.

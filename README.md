@@ -56,13 +56,13 @@ User should verify that file dates are supported by the operating system.
 
 Screenshots from GATE Developer:
 
-##### Runtime parameters selection window
+##### Runtime parameters window
 
-![Screenshot](https://user-images.githubusercontent.com/11142121/30526191-720fd828-9bcb-11e7-9fd6-5702c0856351.png)
+![RunTimeParameters](https://user-images.githubusercontent.com/11142121/30526191-720fd828-9bcb-11e7-9fd6-5702c0856351.png)
 
 ##### Sample document annotated with TIME3X tags
 
-![Screenshot](https://user-images.githubusercontent.com/11142121/30256611-ef21e2e0-9660-11e7-9d02-8de678894b1a.png)
+![SampleDocumentAnnotated](https://user-images.githubusercontent.com/11142121/30256611-ef21e2e0-9660-11e7-9d02-8de678894b1a.png)
 
 ## 5. Release History
 
