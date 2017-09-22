@@ -86,12 +86,12 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
      *
      * @return The name of the annotation used for input.
      */
-    public String getInputAnnotationName() {return inputAnnotationName; }
+    public String getInputAnnotationName() { return inputAnnotationName; }
 
     @RunTime
     @Optional
     @CreoleParameter(comment = "Name of the feature with value the date to be used as reference (if `referenceDate`=annotation). Date should be in \"yyy-MM-dd\" format.", defaultValue = "")
-    public void setInputFeatureName(String name) { inputFeatureName = name;}
+    public void setInputFeatureName(String name) { inputFeatureName = name; }
 
     /**
      * Provides the name of the feature holding the date to be used as reference date. Date should be in "yyy-MM-dd" format.
@@ -151,7 +151,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
      *
      * @return The reference date in 'yyyy-MM-dd' format.
      */
-    public String getExplicitReferenceDate() {return explicitReferenceDate; }
+    public String getExplicitReferenceDate() { return explicitReferenceDate; }
 
     @RunTime
     @Optional
@@ -316,7 +316,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
      * @param dateToValidate The date as string to be validated.
      * @return True if date is valid and in right format else false.
      */
-    private boolean isDateValid(String dateToValidate){
+    private boolean isDateValid(String dateToValidate) {
 
         if (dateToValidate == null) return false;
 
