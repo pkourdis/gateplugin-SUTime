@@ -112,9 +112,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
      *
      * @return The name of the annotation set used for output.
      */
-    public String getOutputAnnotationSetName() {
-        return outputAnnotationSetName;
-    }
+    public String getOutputAnnotationSetName() { return outputAnnotationSetName; }
 
     @RunTime
     @Optional
@@ -126,7 +124,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
      *
      * @return The name of the annotation used for output.
      */
-    public String getOutputAnnotationName() {return outputAnnotationName; }
+    public String getOutputAnnotationName() { return outputAnnotationName; }
 
     @RunTime
     @Optional
