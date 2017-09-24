@@ -43,7 +43,7 @@ import java.text.NumberFormat;
         name = "Stanford Temporal Tagger SUTime",
         icon = "SUTime.png",
         comment = "Annotate documents with TIMEX3 tags using the SUTime library developed by the Stanford CoreNLP group.",
-        helpURL = "https://pkourdis.github.io/gateplugin-TemporalTagger/"
+        helpURL = "https://pkourdis.github.io/gateplugin-SUTime/"
 )
 public class TemporalTagger extends AbstractLanguageAnalyser implements ProcessingResource, Serializable {
 
