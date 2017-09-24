@@ -6,24 +6,32 @@
 
     <groupId>com.github.pkourdis</groupId>
     <artifactId>gateplugin-sutime</artifactId>
-    <version>0.4</version>
+    <version>0.5</version>
 
     <dependencies>
         <dependency>
             <groupId>uk.ac.gate</groupId>
             <artifactId>gate-core</artifactId>
             <version>8.4.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>edu.stanford.nlp</groupId>
             <artifactId>stanford-corenlp</artifactId>
             <version>3.8.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>edu.stanford.nlp</groupId>
             <artifactId>stanford-corenlp</artifactId>
             <version>3.8.0</version>
             <classifier>models</classifier>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.1</version>
         </dependency>
     </dependencies>
 
@@ -46,6 +54,27 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <outputDirectory>.</outputDirectory>
+                    <finalName>${project.artifactId}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
