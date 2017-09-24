@@ -23,12 +23,10 @@ The following libraries should be placed inside the $GATE_HOME/lib directory:
 
 [Download here](https://github.com/pkourdis/gateplugin-SUTime/releases) the latest version, unzip the file and place the folder inside the $GATE_HOME/plugins directory.
 
-**Important notice:** Java Platform SE 9 no longer includes in the standard classpath the JAXB APIs. In order for SUTime to load properly, Mac/Linux users should start GATE by invoking through terminal the command:
+**Important notice:** Java Platform SE 9 no longer includes in the standard classpath the JAXB APIs. In order for SUTime to load properly, Mac/Linux users should start GATE inside the $GATE_HOME/bin directory by invoking through terminal the command:
 
 `./gate.sh --add-modules=java.xml.bind`
  
-inside $GATE_HOME/bin.
-
 ## 3. Usage
 
 The following runtime parameters are available:
