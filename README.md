@@ -66,6 +66,7 @@ Screenshots from GATE Developer:
 
 ## 5. Release History
 
+* **Version 0.5 - September 16, 2017**: JAXB APIs was bundled for Java 9 support.
 * **Version 0.4 - September 16, 2017**: Reference date can also be retrieved from a document annotation. 
 * **Version 0.3 - September 12, 2017**: Improve reference date handling. 
 * **Version 0.2 - September 10, 2017**: Minor corrections to initial version.
