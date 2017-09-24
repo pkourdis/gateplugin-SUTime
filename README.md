@@ -26,6 +26,8 @@ The following libraries should be placed inside the $GATE_HOME/lib directory:
 **Important notice:** Java Platform SE 9 no longer includes in the standard classpath the JAXB APIs. In order for SUTime to load properly, Mac/Linux users should start GATE inside the $GATE_HOME/bin directory by invoking through terminal the command:
 
 `./gate.sh --add-modules=java.xml.bind`
+
+Window users should add to the enviroment variables, the variable with name "JAVA_TOOL_OPTIONS" with value "--add-modules=java.xml.bind". [Watch here](https://www.youtube.com/watch?v=C-U9SGaNbwY) how to find the enviroment variables configuration panel for Windows 10.
  
 ## 3. Usage
 
