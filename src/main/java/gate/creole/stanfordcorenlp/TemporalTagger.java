@@ -156,7 +156,7 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
     @RunTime
     @Optional
     @CreoleParameter(comment = "True to write the reference date or false not to write.", defaultValue = "false")
-    public void setWriteReferenceDate( Boolean choice) { writeReferenceDate = choice; }
+    public void setWriteReferenceDate(Boolean choice) { writeReferenceDate = choice; }
 
     /**
      * Provides the user's choice (true/false) to write the reference date in the output annotation.
@@ -292,14 +292,14 @@ public class TemporalTagger extends AbstractLanguageAnalyser implements Processi
         try {
             Path file = Paths.get(document.getSourceUrl().toURI());
             BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
-            if (attr != null && fDate.equals("creationDate")) {
+            if (attr != null && "creationDate".equals(fDate)) {
                 LocalDateTime creationTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), defaultZoneId);
                 fileDate = creationTime.toLocalDate();
-            } else if (attr != null && fDate.equals("lastAccessDate")) {
+            } else if (attr != null && "lastAccessDate".equals(fDate)) {
                 LocalDateTime lastAccessTime = LocalDateTime.ofInstant(attr.lastAccessTime().toInstant(), defaultZoneId);
                 fileDate = lastAccessTime.toLocalDate();
             }
-            else if (attr != null && fDate.equals("lastModifiedDate")) {
+            else if (attr != null && "lastModifiedDate".equals(fDate)) {
                 LocalDateTime lastModifiedTime = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), defaultZoneId);
                 fileDate = lastModifiedTime.toLocalDate();
             }
